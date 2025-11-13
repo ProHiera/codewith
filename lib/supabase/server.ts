@@ -3,5 +3,6 @@ import { cookies } from 'next/headers';
 
 export const createServerSupabaseClient = async () => {
   const cookieStore = await cookies();
-  return createServerComponentClient({ cookies: () => cookieStore });
+  // createServerComponentClient expects a cookies function that returns a Promise-like value
+  return createServerComponentClient({ cookies: async () => cookieStore });
 };

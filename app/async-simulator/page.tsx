@@ -18,7 +18,7 @@ export default function AsyncSimulatorPage() {
   const [data, setData] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const steps: Step[] = [
+  const steps: SimulationStep[] = [
     { id: 1, code: 'setLoading(true)', description: '로딩 상태 시작', state: 'pending', delay: 500 },
     { id: 2, code: 'await fetch(url)', description: 'API 요청 시작', state: 'pending', delay: 1500 },
     { id: 3, code: 'await response.json()', description: '응답 파싱', state: 'pending', delay: 800 },
@@ -26,7 +26,7 @@ export default function AsyncSimulatorPage() {
     { id: 5, code: 'setLoading(false)', description: '로딩 완료', state: 'pending', delay: 300 },
   ];
 
-  const [stepStates, setStepStates] = useState<Step[]>(steps);
+  const [stepStates, setStepStates] = useState<SimulationStep[]>(steps);
 
   const runSimulation = async () => {
     setIsRunning(true);

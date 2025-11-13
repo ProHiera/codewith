@@ -19,7 +19,7 @@ type ConceptCard = {
   visual?: string;
 };
 
-const concepts: Concept[] = [
+const concepts: ConceptSnap[] = [
   {
     id: 'expression-vs-statement',
     title: '표현식 vs 문(Statement)',
@@ -153,7 +153,7 @@ const concepts: Concept[] = [
 ];
 
 export default function ConceptSnapsPage() {
-  const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null);
+  const [selectedConcept, setSelectedConcept] = useState<ConceptSnap | null>(null);
   const [currentCard, setCurrentCard] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -173,7 +173,7 @@ export default function ConceptSnapsPage() {
     }
   };
 
-  const selectConcept = (concept: Concept) => {
+  const selectConcept = (concept: ConceptSnap) => {
     setSelectedConcept(concept);
     setCurrentCard(0);
   };
