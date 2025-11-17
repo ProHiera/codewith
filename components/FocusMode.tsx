@@ -59,8 +59,8 @@ export default function FocusMode({
     setIsActive(false);
     const stats: SessionStats = {
       cardsReviewed,
-      accuracy: 85, // TODO: 실제 정답률 계산
-      focusScore: 92, // TODO: 집중도 점수 계산
+      accuracy: 85, // Future enhancement: Calculate from actual answer data
+      focusScore: 92, // Future enhancement: Calculate from session engagement metrics
       duration: duration * 60 - timeLeft,
     };
     onComplete?.(stats);

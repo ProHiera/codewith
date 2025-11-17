@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       graph,
     });
   } catch (error) {
-    console.error('Diagnosis error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to diagnose error' },
       { status: 500 }

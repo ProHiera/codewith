@@ -61,9 +61,9 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
-    return NextResponse.json(data);
+    return NextResponse.json(newCard);
   } catch (error) {
-    console.error('Create Learning Card Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to create learning card' },
       { status: 500 }
@@ -125,8 +125,8 @@ export async function GET(request: Request) {
     if (error) throw error;
 
     return NextResponse.json(data || []);
-  } catch (error) {
-    console.error('Get Learning Cards Error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to fetch learning cards' },
       { status: 500 }

@@ -44,8 +44,8 @@ export default function PortfolioPage() {
 
       if (error) throw error;
       setProjects(data || []);
-    } catch (error) {
-      console.error('Failed to fetch projects:', error);
+    } catch {
+      // Silent fail - projects not available
     } finally {
       setLoading(false);
     }
@@ -81,8 +81,7 @@ export default function PortfolioPage() {
       });
       setShowForm(false);
       fetchProjects();
-    } catch (error) {
-      console.error('Failed to create project:', error);
+    } catch {
       alert('프로젝트 생성에 실패했습니다.');
     }
   };
@@ -98,8 +97,8 @@ export default function PortfolioPage() {
 
       if (error) throw error;
       fetchProjects();
-    } catch (error) {
-      console.error('Failed to delete project:', error);
+    } catch {
+      // Silent fail - delete failed
     }
   };
 

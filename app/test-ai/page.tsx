@@ -43,7 +43,6 @@ const [count, setCount] = useState(0);
       const data = await response.json();
       setResult(data);
     } catch (error) {
-      console.error('Error:', error);
       setResult({ error: String(error) });
     } finally {
       setLoading(false);

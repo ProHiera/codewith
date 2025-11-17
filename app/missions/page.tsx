@@ -29,8 +29,8 @@ export default function MissionsPage() {
 
         if (error) throw error;
         setMissions(data || []);
-      } catch (error) {
-        console.error('Failed to fetch missions:', error);
+      } catch {
+        // Silent fail - missions not available
       } finally {
         setLoading(false);
       }

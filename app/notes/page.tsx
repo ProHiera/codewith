@@ -37,8 +37,8 @@ export default function NotesPage() {
 
       if (error) throw error;
       setNotes(data || []);
-    } catch (error) {
-      console.error('Failed to fetch notes:', error);
+    } catch {
+      // Silent fail - notes not available
     } finally {
       setLoading(false);
     }
@@ -79,8 +79,7 @@ export default function NotesPage() {
       setShowForm(false);
       setEditingId(null);
       fetchNotes();
-    } catch (error) {
-      console.error('Failed to save note:', error);
+    } catch {
       alert('저장에 실패했습니다.');
     }
   };
@@ -106,8 +105,8 @@ export default function NotesPage() {
 
       if (error) throw error;
       fetchNotes();
-    } catch (error) {
-      console.error('Failed to delete note:', error);
+    } catch {
+      // Silent fail - delete failed
     }
   };
 

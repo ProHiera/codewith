@@ -4,13 +4,19 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 
+interface Submission {
+  id: string;
+  score: number;
+  created_at: string;
+}
+
 interface Stats {
   totalSubmissions: number;
   completedMissions: number;
   averageScore: number;
   totalErrors: number;
   totalProjects: number;
-  recentActivity: any[];
+  recentActivity: Submission[];
 }
 
 export default function DashboardPage() {
@@ -24,7 +30,7 @@ export default function DashboardPage() {
     recentActivity: [],
   });
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -61,16 +67,16 @@ export default function DashboardPage() {
         .eq('user_id', userId);
 
       const totalSubmissions = submissions?.length || 0;
-      const completedMissions = submissions?.filter((s: any) => s.score >= 80).length || 0;
+      const completedMissions = submissions?.filter((s) => s.score >= 80).length || 0;
       const averageScore = totalSubmissions > 0
-        ? Math.round(submissions!.reduce((sum: number, s: any) => sum + s.score, 0) / totalSubmissions)
+        ? Math.round(submissions!.reduce((sum, s) => sum + s.score, 0) / totalSubmissions)
         : 0;
 
       // Recent activity (last 7 days)
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       const recentSubmissions = submissions?.filter(
-        (s: any) => new Date(s.created_at) > sevenDaysAgo
+        (s) => new Date(s.created_at) > sevenDaysAgo
       ) || [];
 
       setStats({
@@ -81,8 +87,8 @@ export default function DashboardPage() {
         totalProjects: projects?.length || 0,
         recentActivity: recentSubmissions,
       });
-    } catch (error) {
-      console.error('Failed to fetch stats:', error);
+    } catch {
+      // Silent fail - stats not available
     } finally {
       setLoading(false);
     }

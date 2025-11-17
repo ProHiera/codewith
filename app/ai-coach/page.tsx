@@ -74,7 +74,7 @@ export default function AICoachPage() {
         });
       }
     } catch (error) {
-      console.error('AI chat error:', error);
+      // Silent fail - show user-facing error message
       const errorMessage: Message = {
         role: 'assistant',
         content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
@@ -103,7 +103,7 @@ export default function AICoachPage() {
 
       alert('메모로 저장되었습니다!');
     } catch (error) {
-      console.error('Save note error:', error);
+      // Silent fail - alert handles user feedback
       alert('저장에 실패했습니다.');
     }
   };

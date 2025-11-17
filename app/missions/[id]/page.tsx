@@ -32,8 +32,8 @@ export default function MissionDetailPage() {
         if (data.spec_json?.template) {
           setCode(data.spec_json.template);
         }
-      } catch (error) {
-        console.error('Failed to fetch mission:', error);
+      } catch {
+        // Silent fail - mission not found
       } finally {
         setLoading(false);
       }
@@ -80,8 +80,7 @@ export default function MissionDetailPage() {
       if (error) throw error;
 
       setResult({ score, feedback, diff });
-    } catch (error) {
-      console.error('Failed to submit:', error);
+    } catch {
       alert('제출에 실패했습니다.');
     } finally {
       setSubmitting(false);

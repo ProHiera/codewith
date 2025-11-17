@@ -66,7 +66,7 @@ export async function POST(
       return NextResponse.json({ liked: true });
     }
   } catch (error) {
-    console.error('Toggle Like Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to toggle like' },
       { status: 500 }

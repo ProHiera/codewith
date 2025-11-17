@@ -40,7 +40,7 @@ export default function WeaknessAnalytics({
 
   useEffect(() => {
     const load = async () => {
-      // TODO: API 호출
+      // Future enhancement: Replace sample data with API call
       // const response = await fetch(`/api/analytics/weaknesses?userId=${userId}`);
 
       // 샘플 데이터

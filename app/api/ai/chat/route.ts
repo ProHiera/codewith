@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
       model,
       usage: completion.usage,
     });
-  } catch (error) {
-    console.error('AI chat error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json({ error: '응답 생성에 실패했습니다.' }, { status: 500 });
   }
 }

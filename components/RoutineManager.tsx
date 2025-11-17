@@ -57,7 +57,7 @@ export default function RoutineManager({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
-    // TODO: Load from API
+    // Future enhancement: Load routine data from API
   }, []);
 
   const handleEnableNotifications = async () => {

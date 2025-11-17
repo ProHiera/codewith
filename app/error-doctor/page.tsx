@@ -5,10 +5,16 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import PageHeader from '@/components/PageHeader';
 
+interface DiagnosisResult {
+  rootCause: string;
+  fixPatch: string;
+  severity?: string;
+}
+
 export default function ErrorDoctorPage() {
   const router = useRouter();
   const [logText, setLogText] = useState('');
-  const [analysis, setAnalysis] = useState<any>(null);
+  const [analysis, setAnalysis] = useState<DiagnosisResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleDiagnose = async () => {
@@ -43,8 +49,7 @@ export default function ErrorDoctorPage() {
       });
 
       setAnalysis(result);
-    } catch (error) {
-      console.error('Diagnosis failed:', error);
+    } catch {
       alert('진단에 실패했습니다.');
     } finally {
       setLoading(false);
@@ -135,7 +140,7 @@ export default function ErrorDoctorPage() {
               <ol className="space-y-3">
                 {analysis.steps.map((step: string, index: number) => (
                   <li key={index} className="flex items-start">
-                    <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold mr-3">
+                    <span className="shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold mr-3">
                       {index + 1}
                     </span>
                     <p className="text-gray-700 pt-1">{step}</p>

@@ -40,28 +40,96 @@ export default function CatalogPage({ searchParams }: Props) {
         </div>
 
         {/* 필터 바 */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-2 flex-wrap">
-            {DOMAINS.map(d => (
+        <div className="mb-6">
+          {/* Domain 필터 */}
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-gray-700 mb-2">도메인</h2>
+            <div className="flex gap-2 flex-wrap">
               <Link
-                key={d.key}
-                href={`/catalog?domain=${d.key}${lang ? `&lang=${lang}` : ''}`}
-                className={`px-3 py-1 rounded-full text-sm ${domain === d.key ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                href="/catalog"
+                className={`px-3 py-1 rounded-full text-sm ${!domain ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
               >
-                {d.label}
+                전체
               </Link>
-            ))}
+              {DOMAINS.map(d => (
+                <Link
+                  key={d.key}
+                  href={`/catalog?domain=${d.key}${lang ? `&lang=${lang}` : ''}`}
+                  className={`px-3 py-1 rounded-full text-sm ${domain === d.key ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                >
+                  {d.label}
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            {LANGS.map(l => (
-              <Link
-                key={l.key}
-                href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}
-                className={`px-3 py-1 rounded-full text-sm ${lang === l.key ? 'bg-purple-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
-              >
-                {l.label}
-              </Link>
-            ))}
+
+          {/* Language 필터 - 카테고리별로 그룹화 */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-700 mb-2">기술 스택</h2>
+            
+            {/* 프론트엔드 */}
+            <div className="mb-3">
+              <h3 className="text-xs text-gray-500 mb-1">Frontend</h3>
+              <div className="flex gap-2 flex-wrap">
+                {LANGS.filter(l => l.category === 'frontend').map(l => (
+                  <Link
+                    key={l.key}
+                    href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}
+                    className={`px-3 py-1 rounded-full text-sm ${lang === l.key ? 'bg-purple-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 백엔드 */}
+            <div className="mb-3">
+              <h3 className="text-xs text-gray-500 mb-1">Backend</h3>
+              <div className="flex gap-2 flex-wrap">
+                {LANGS.filter(l => l.category === 'backend').map(l => (
+                  <Link
+                    key={l.key}
+                    href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}
+                    className={`px-3 py-1 rounded-full text-sm ${lang === l.key ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 데이터베이스 */}
+            <div className="mb-3">
+              <h3 className="text-xs text-gray-500 mb-1">Database</h3>
+              <div className="flex gap-2 flex-wrap">
+                {LANGS.filter(l => l.category === 'database').map(l => (
+                  <Link
+                    key={l.key}
+                    href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}
+                    className={`px-3 py-1 rounded-full text-sm ${lang === l.key ? 'bg-orange-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 도구 */}
+            <div className="mb-3">
+              <h3 className="text-xs text-gray-500 mb-1">Tools</h3>
+              <div className="flex gap-2 flex-wrap">
+                {LANGS.filter(l => l.category === 'tool').map(l => (
+                  <Link
+                    key={l.key}
+                    href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}
+                    className={`px-3 py-1 rounded-full text-sm ${lang === l.key ? 'bg-gray-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

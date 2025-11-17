@@ -70,8 +70,8 @@ export async function POST(request: Request) {
         });
 
         ai_summary = completion.choices[0]?.message?.content || null;
-      } catch (error) {
-        console.error('AI Summary Error:', error);
+      } catch {
+        // Silent fail - AI summary is optional, continue without it
       }
     }
 
@@ -92,8 +92,8 @@ export async function POST(request: Request) {
     if (error) throw error;
 
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('Create Post Error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to create post' },
       { status: 500 }
@@ -155,8 +155,8 @@ export async function GET(request: Request) {
     if (error) throw error;
 
     return NextResponse.json(data || []);
-  } catch (error) {
-    console.error('Get Posts Error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to fetch posts' },
       { status: 500 }

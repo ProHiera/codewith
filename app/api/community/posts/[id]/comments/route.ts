@@ -67,7 +67,7 @@ export async function POST(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Create Comment Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to create comment' },
       { status: 500 }
@@ -119,7 +119,7 @@ export async function GET(
 
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error('Get Comments Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to fetch comments' },
       { status: 500 }

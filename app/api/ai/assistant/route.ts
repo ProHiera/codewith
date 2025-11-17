@@ -80,8 +80,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: aiMessage,
     });
-  } catch (error) {
-    console.error('AI Chat Error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to generate AI response' },
       { status: 500 }
@@ -132,8 +132,8 @@ export async function GET(request: Request) {
     if (error) throw error;
 
     return NextResponse.json(data || []);
-  } catch (error) {
-    console.error('Get Chat History Error:', error);
+  } catch {
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to fetch chat history' },
       { status: 500 }

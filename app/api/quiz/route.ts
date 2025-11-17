@@ -108,7 +108,7 @@ export async function POST(request: Request) {
       explanation: question.explanation,
     });
   } catch (error) {
-    console.error('Submit Quiz Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to submit quiz' },
       { status: 500 }
@@ -171,7 +171,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error('Get Quiz Questions Error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to fetch quiz questions' },
       { status: 500 }

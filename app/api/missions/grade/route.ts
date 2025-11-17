@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CSSGrader } from '@/lib/graders/css-grader';
+import { CSSGrader, CSSGradeResult } from '@/lib/graders/css-grader';
+
+interface GradeResult {
+  score: number;
+  feedback: string;
+  passed: boolean;
+  diff?: unknown;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { code, type, expected } = await request.json();
 
-    let result: any;
+    let result: GradeResult;
 
     switch (type) {
       case 'css':
@@ -34,8 +41,7 @@ export async function POST(request: NextRequest) {
       diff: result.diff || null,
       passed: result.passed,
     });
-  } catch (error) {
-    console.error('Grading error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to grade submission' },
       { status: 500 }

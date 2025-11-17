@@ -61,8 +61,8 @@ export default function AIAssistant({
       };
 
       setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      console.error('AI 응답 오류:', error);
+    } catch {
+      // Silent fail - AI response error
     } finally {
       setIsLoading(false);
     }

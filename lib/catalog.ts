@@ -102,6 +102,24 @@ export const CATALOG: CatalogItem[] = [
     langs: ['git'],
   },
   {
+    id: 'deploy-guide',
+    title: '배포 가이드',
+    description: 'Vercel/Netlify/Railway/AWS 배포 튜토리얼',
+    icon: '🚀',
+    path: '/deploy-guide',
+    domain: 'devops',
+    langs: ['git', 'node', 'react'],
+  },
+  {
+    id: 'git-simulator',
+    title: 'Git 시뮬레이터',
+    description: 'Git 명령어 실습 및 시각화',
+    icon: '🌿',
+    path: '/git-simulator',
+    domain: 'devops',
+    langs: ['git'],
+  },
+  {
     id: 'learning-paths',
     title: '러닝 경로 프리셋',
     description: '목표별 N주 로드맵',
@@ -146,13 +164,18 @@ export const DOMAINS: { key: Domain; label: string }[] = [
   { key: 'devops', label: 'DevOps' },
 ];
 
-export const LANGS: { key: string; label: string }[] = [
-  { key: 'js', label: 'JavaScript' },
-  { key: 'react', label: 'React' },
-  { key: 'node', label: 'Node/Express' },
-  { key: 'sql', label: 'SQL' },
-  { key: 'prisma', label: 'Prisma' },
-  { key: 'java', label: 'Java' },
-  { key: 'git', label: 'Git' },
-  { key: 'css', label: 'CSS' },
+export const LANGS: { key: string; label: string; category: 'frontend' | 'backend' | 'database' | 'tool' }[] = [
+  { key: 'html', label: 'HTML', category: 'frontend' },
+  { key: 'css', label: 'CSS', category: 'frontend' },
+  { key: 'js', label: 'JavaScript', category: 'frontend' },
+  { key: 'ts', label: 'TypeScript', category: 'frontend' },
+  { key: 'react', label: 'React', category: 'frontend' },
+  { key: 'vue', label: 'Vue', category: 'frontend' },
+  { key: 'node', label: 'Node.js', category: 'backend' },
+  { key: 'python', label: 'Python', category: 'backend' },
+  { key: 'java', label: 'Java', category: 'backend' },
+  { key: 'spring', label: 'Spring Boot', category: 'backend' },
+  { key: 'sql', label: 'SQL', category: 'database' },
+  { key: 'prisma', label: 'Prisma', category: 'database' },
+  { key: 'git', label: 'Git', category: 'tool' },
 ];

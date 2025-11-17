@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('AI categorization error:', error);
+    // Silent fail - return error response to client
     return NextResponse.json(
       { error: 'Failed to categorize content' },
       { status: 500 }

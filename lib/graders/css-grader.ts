@@ -5,8 +5,13 @@ interface CSSGradeResult {
   passed: boolean;
 }
 
+interface CSSExpected {
+  selectors?: string[];
+  properties?: Record<string, string>;
+}
+
 export class CSSGrader {
-  static grade(code: string, expected: any): CSSGradeResult {
+  static grade(code: string, expected: CSSExpected): CSSGradeResult {
     let score = 0;
     const feedback: string[] = [];
     let totalChecks = 0;
