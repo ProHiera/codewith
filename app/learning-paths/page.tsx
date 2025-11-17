@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/components/PageHeader';
 
 type PathPreset = {
@@ -170,8 +171,29 @@ const PRESETS: PathPreset[] = [
 ];
 
 export default function LearningPathsPage() {
-  const [selectedPath, setSelectedPath] = useState<PathPreset | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
+  const mode = searchParams?.get('mode'); // guided | free | null
+  const recommended = searchParams?.get('recommended'); // '1' | 'true' | null
+  const preselectId = searchParams?.get('select');
+  const level = searchParams?.get('level') as 'beginner' | 'intermediate' | 'advanced' | null;
+
+  // Pick first preset by level if we have no explicit select
+  const levelDefault = useMemo(() => {
+    if (!level) return null;
+    return PRESETS.find(p => p.difficulty === level) || null;
+  }, [level]);
+
+  // Derive initial selection once from query string
+  const initialSelected = useMemo<PathPreset | null>(() => {
+    if (preselectId) {
+      return PRESETS.find(p => p.id === preselectId) || null;
+    }
+    return levelDefault;
+  }, [preselectId, levelDefault]);
+
+  const [selectedPath, setSelectedPath] = useState<PathPreset | null>(initialSelected);
 
   const filteredPresets = PRESETS.filter(preset => 
     filter === 'all' || preset.difficulty === filter
@@ -196,7 +218,7 @@ export default function LearningPathsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-8">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 to-purple-50 p-8">
       <div className="max-w-7xl mx-auto">
         <PageHeader />
         
@@ -206,6 +228,42 @@ export default function LearningPathsPage() {
             목표별 추천 학습 순서와 로드맵을 제공합니다
           </p>
         </div>
+
+        {/* 추천 결과 CTA (평가 완료 진입 시 노출) */}
+        {(recommended === '1' || recommended === 'true') && (
+          <div className="mb-8 bg-white rounded-xl shadow-lg p-6 border border-blue-100">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🎯</div>
+                <div>
+                  <div className="text-lg font-bold text-gray-900 mb-1">레벨 평가 결과에 맞춘 추천 경로</div>
+                  <div className="text-sm text-gray-600">
+                    {selectedPath
+                      ? `${selectedPath.title} · 예상 ${selectedPath.duration} · 주제 ${selectedPath.topics.length}개`
+                      : '왼쪽에서 추천 경로를 확인하거나 자유 학습을 선택하세요'}
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    const id = selectedPath?.id || levelDefault?.id || PRESETS[0].id;
+                    router.push(`/learning-paths?mode=guided&select=${id}${level ? `&level=${level}` : ''}`);
+                  }}
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                >
+                  이대로 진행할게요
+                </button>
+                <button
+                  onClick={() => router.push('/learning-paths?mode=free')}
+                  className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold"
+                >
+                  자유롭게 학습할래요!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 필터 */}
         <div className="flex gap-3 mb-6">
@@ -368,13 +426,25 @@ export default function LearningPathsPage() {
                     ))}
                   </div>
 
-                  <button className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                  <button
+                    onClick={() => {
+                      // Guided 모드일 때는 선택을 고정하고, 자유 모드면 일반 진입
+                      const base = '/missions';
+                      if (mode === 'guided') {
+                        // 간단히 선택된 경로 id를 쿼리로 넘겨 관련 미션 필터링의 발판을 둔다
+                        router.push(`${base}?path=${selectedPath.id}`);
+                      } else {
+                        router.push(base);
+                      }
+                    }}
+                    className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                  >
                     이 경로로 시작하기 →
                   </button>
                 </div>
 
                 {/* 학습 팁 */}
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6">
+                <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-xl p-6">
                   <h3 className="text-lg font-bold mb-4">💡 학습 팁</h3>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
+import CodeEditor from '@/components/CodeEditor';
 
 type APIMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type HttpMethod = APIMethod;
@@ -22,16 +23,20 @@ const templates: Template[] = [
     description: '기본적인 GET 요청으로 데이터 가져오기',
     code: `async function fetchData() {
   try {
+    // 1) API URL을 과제/연습에 맞게 변경하세요 👇
     const response = await fetch('https://api.example.com/users');
     
+    // 2) 에러 상태 처리: response.ok 확인 👇
     if (!response.ok) {
       throw new Error(\`HTTP error! status: \${response.status}\`);
     }
     
+    // 3) 응답 JSON 파싱 후 사용하는 위치 👇
     const data = await response.json();
     console.log(data);
     return data;
   } catch (error) {
+    // 4) 에러 메시지를 상황에 맞게 개선해보세요 👇
     console.error('Fetch error:', error);
   }
 }`
@@ -43,14 +48,20 @@ const templates: Template[] = [
     description: 'JSON 데이터를 서버에 전송',
     code: `async function createUser(userData) {
   try {
-    const response = await fetch('https://api.example.com/users', {
+    // 1) API URL을 과제/연습에 맞게 변경하세요 👇
+    const response = await fetch('https://ap               i.example.com/users', {
       method: 'POST',
       headers: {
+        // 2) 필요한 헤더 추가: Content-Type, Authorization 등 👇
         'Content-Type': 'application/json',
       },
+      // 3) 전송할 데이터 구성 위치 👇
       body: JSON.stringify(userData)
     });
     
+    // 4) 필요 시 response.ok 확인으로 에러 상태 분기 👇
+    // if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -67,10 +78,12 @@ const templates: Template[] = [
 
 async function fetchData() {
   try {
+    // 1) API URL을 과제/연습에 맞게 변경하세요 👇
     const response = await axios.get('https://api.example.com/users');
     console.log(response.data);
     return response.data;
   } catch (error) {
+    // 2) 에러 유형별로 분기 처리 (response/request/message) 👇
     if (error.response) {
       console.error('Server error:', error.response.status);
     } else if (error.request) {
@@ -91,15 +104,18 @@ async function fetchData() {
 const api = axios.create({
   baseURL: 'https://api.example.com',
   headers: {
+    // 1) 토큰 주입 위치: 안전한 저장/갱신 전략을 고민해보세요 👇
     'Authorization': \`Bearer \${localStorage.getItem('token')}\`
   }
 });
 
 async function fetchProtectedData() {
   try {
+    // 2) 엔드포인트 경로를 과제/연습에 맞게 변경하세요 👇
     const response = await api.get('/protected/users');
     return response.data;
   } catch (error) {
+    // 3) 인증 오류 시 재로그인/토큰 재발급 등 흐름 설계 👇
     console.error('Auth error:', error);
   }
 }`
@@ -127,7 +143,7 @@ export default function ApiSandboxPage() {
   const [url, setUrl] = useState('https://api.example.com/users');
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
   const [responseTime, setResponseTime] = useState<number>(0);
 
@@ -173,7 +189,7 @@ export default function ApiSandboxPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-8">
+  <div className="min-h-screen bg-linear-to-b from-green-50 to-white p-8">
       <div className="max-w-7xl mx-auto">
         <PageHeader />
         
@@ -256,11 +272,35 @@ export default function ApiSandboxPage() {
                   📋 복사
                 </button>
               </div>
-              <textarea
+              {/* 에디터 힌트 */}
+              <div className="px-6 py-2 bg-gray-50 border-b text-xs md:text-sm text-gray-700">
+                <ul className="list-disc pl-5 space-y-1">
+                  {selectedTemplate.id === 'fetch-post' ? (
+                    <>
+                      <li>API URL을 과제에 맞게 바꾸세요</li>
+                      <li>headers에 Content-Type, Authorization 등 필요한 헤더를 추가하세요</li>
+                      <li>body(JSON.stringify)에 전송할 데이터를 구성하세요</li>
+                    </>
+                  ) : selectedTemplate.id === 'axios-auth' ? (
+                    <>
+                      <li>Authorization 토큰 주입 방식(localStorage 등)을 점검하세요</li>
+                      <li>baseURL와 엔드포인트 경로를 상황에 맞게 변경하세요</li>
+                      <li>401/403 등 인증 오류 처리 흐름을 설계하세요</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>API URL을 과제에 맞게 바꾸세요</li>
+                      <li>네트워크/서버 에러 상태를 구분해 처리하세요</li>
+                      <li>응답 데이터(JSON)를 파싱하고 실제로 활용해보세요</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+              <CodeEditor
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full p-6 font-mono text-sm bg-gray-900 text-white min-h-[300px] focus:outline-none"
-                spellCheck={false}
+                onChange={setCode}
+                minHeight={300}
+                placeholder="/* 필요한 API 호출 코드를 작성하세요 */"
               />
             </div>
 

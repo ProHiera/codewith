@@ -1,15 +1,25 @@
 @import "tailwindcss";
 
+/* Pretendard Variable (self-contained via @font-face, no @import side-effects) */
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendardvariable.woff2") format("woff2-variations");
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Ensure Tailwind v4 font-sans utilities use Pretendard */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", "Helvetica Neue", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
-@theme inline {
+/* Optional: define tokens other styles can reuse */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +32,10 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", "Helvetica Neue", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+/* Safety net: if some elements force font-sans class, keep it aligned */
+.font-sans {
+  font-family: var(--font-sans);
 }

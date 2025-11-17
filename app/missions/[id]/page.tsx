@@ -4,41 +4,42 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { Mission } from '@/types';
+import CodeEditor from '@/components/CodeEditor';
 
 export default function MissionDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [mission, setMission] = useState<Mission | null>(null);
   const [code, setCode] = useState('');
-  const [result, setResult] = useState<any>(null);
+  type MissionResult = { score: number; feedback?: string; diff?: unknown } | null;
+  const [result, setResult] = useState<MissionResult>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    const fetchMission = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('missions')
+          .select('*')
+          .eq('id', params.id)
+          .single();
+
+        if (error) throw error;
+        setMission(data);
+        
+        // Set initial code template
+        if (data.spec_json?.template) {
+          setCode(data.spec_json.template);
+        }
+      } catch (error) {
+        console.error('Failed to fetch mission:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchMission();
   }, [params.id]);
-
-  const fetchMission = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('missions')
-        .select('*')
-        .eq('id', params.id)
-        .single();
-
-      if (error) throw error;
-      setMission(data);
-      
-      // Set initial code template
-      if (data.spec_json?.template) {
-        setCode(data.spec_json.template);
-      }
-    } catch (error) {
-      console.error('Failed to fetch mission:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async () => {
     if (!mission) return;
@@ -150,11 +151,14 @@ export default function MissionDetailPage() {
           {/* Code Editor */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">코드 에디터</h2>
-            <textarea
+            <div className="mb-3 text-xs md:text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded p-3">
+              <span className="font-semibold">힌트</span>: 반환/출력 형식과 요구사항을 지켜 제출하세요. Tab으로 들여쓰기 가능합니다.
+            </div>
+            <CodeEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full h-96 p-4 font-mono text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="여기에 코드를 작성하세요..."
+              onChange={setCode}
+              minHeight={384}
+              placeholder="/* 여기에 코드를 입력하세요 */"
             />
             <button
               onClick={handleSubmit}

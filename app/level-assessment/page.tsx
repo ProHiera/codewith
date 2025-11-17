@@ -8,15 +8,12 @@ import { supabase } from '@/lib/supabase/client';
 export default function LevelAssessmentPage() {
   const router = useRouter();
   const [step, setStep] = useState<'choose' | 'test'>('choose');
-  const [selectedLevel, setSelectedLevel] = useState<LearnerLevel | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [testComplete, setTestComplete] = useState(false);
   const [assessedLevel, setAssessedLevel] = useState<LearnerLevel | null>(null);
 
   const handleChooseLevel = async (level: LearnerLevel) => {
-    setSelectedLevel(level);
-    
     // 사용자 레벨 업데이트
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -81,10 +78,17 @@ export default function LevelAssessmentPage() {
 
   const currentQuestion = LEVEL_ASSESSMENT_QUESTIONS[currentQuestionIndex];
 
+  const mapLevelToDifficulty = (lvl: LearnerLevel): 'beginner' | 'intermediate' | 'advanced' => {
+    if (lvl === 'beginner' || lvl === 'elementary') return 'beginner';
+    if (lvl === 'intermediate') return 'intermediate';
+    return 'advanced';
+  };
+
   if (testComplete && assessedLevel) {
     const levelInfo = LEVELS[assessedLevel];
+    const difficulty = mapLevelToDifficulty(assessedLevel);
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
             <div className="text-6xl mb-4">{levelInfo.icon}</div>
@@ -105,7 +109,7 @@ export default function LevelAssessmentPage() {
               </div>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-6 mb-6 text-left">
               <h3 className="font-bold mb-3">추천 학습 경로:</h3>
               <div className="space-y-2">
                 {levelInfo.recommendedPath.map((path, i) => (
@@ -116,9 +120,24 @@ export default function LevelAssessmentPage() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-left">
+              <button
+                onClick={() => router.push(`/learning-paths?recommended=1&mode=guided&level=${difficulty}`)}
+                className="w-full px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+              >
+                이대로 진행할게요
+              </button>
+              <button
+                onClick={() => router.push('/learning-paths?recommended=1&mode=free')}
+                className="w-full px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold"
+              >
+                자유롭게 학습할래요!
+              </button>
+            </div>
+
             <button
               onClick={() => router.push('/dashboard')}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+              className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-black font-semibold"
             >
               대시보드로 이동
             </button>
@@ -130,7 +149,7 @@ export default function LevelAssessmentPage() {
 
   if (step === 'test') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="mb-6">
@@ -194,7 +213,7 @@ export default function LevelAssessmentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-12">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">나의 학습 레벨 설정</h1>

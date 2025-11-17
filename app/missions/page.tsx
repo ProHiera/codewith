@@ -4,43 +4,78 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Mission } from '@/types';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function MissionsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    checkUser();
-    fetchMissions();
-  }, []);
+    const run = async () => {
+      // auth check
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      // fetch missions
+      try {
+        const { data, error } = await supabase
+          .from('missions')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      router.push('/login');
-      return;
+        if (error) throw error;
+        setMissions(data || []);
+      } catch (error) {
+        console.error('Failed to fetch missions:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    void run();
+  }, [router]);
+
+  // deprecated individual fns replaced by single effect above
+
+  // query filters: ?domain=frontend|backend|data|devops & ?lang=js|react|css|...
+  const selectedDomain = (searchParams.get('domain') || '').toLowerCase();
+  const selectedLang = (searchParams.get('lang') || '').toLowerCase();
+
+  // map catalog langs to mission.type
+  const langToMissionType: Record<string, Mission['type']> = {
+    js: 'javascript',
+    javascript: 'javascript',
+    react: 'react',
+    css: 'css',
+  } as const;
+
+  const domainToTypes: Record<string, Mission['type'][]> = {
+    frontend: ['css', 'javascript', 'react'],
+    devops: ['error'],
+    backend: [],
+    data: [],
+  } as const;
+
+  const filteredMissions = missions.filter((m) => {
+    // filter by lang first if provided
+    if (selectedLang) {
+      const t = langToMissionType[selectedLang];
+      if (t && m.type !== t) return false;
+      // if unsupported lang provided, fall through (no filtering)
     }
-    setUser(user);
-  };
-
-  const fetchMissions = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('missions')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setMissions(data || []);
-    } catch (error) {
-      console.error('Failed to fetch missions:', error);
-    } finally {
-      setLoading(false);
+    // filter by domain if provided
+    if (selectedDomain) {
+      const allowed = domainToTypes[selectedDomain];
+      if (Array.isArray(allowed)) {
+        if (allowed.length === 0) return false; // no missions mapped yet
+        if (!allowed.includes(m.type)) return false;
+      }
     }
-  };
+    return true;
+  });
 
   if (loading) {
     return (
@@ -78,8 +113,42 @@ export default function MissionsPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {(selectedDomain || selectedLang) && (
+          <div className="mb-6 flex flex-wrap items-center gap-2 text-sm">
+            <span className="text-gray-500">필터:</span>
+            {selectedDomain && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+                도메인: {selectedDomain}
+                <Link
+                  prefetch={false}
+                  href={{ pathname: '/missions', query: selectedLang ? { lang: selectedLang } : {} }}
+                  className="ml-1 text-gray-500 hover:text-gray-700"
+                  aria-label="도메인 필터 해제"
+                >
+                  ✕
+                </Link>
+              </span>
+            )}
+            {selectedLang && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+                언어: {selectedLang}
+                <Link
+                  prefetch={false}
+                  href={{ pathname: '/missions', query: selectedDomain ? { domain: selectedDomain } : {} }}
+                  className="ml-1 text-gray-500 hover:text-gray-700"
+                  aria-label="언어 필터 해제"
+                >
+                  ✕
+                </Link>
+              </span>
+            )}
+            <Link prefetch={false} href="/missions" className="text-blue-600 hover:text-blue-500">
+              모두 보기
+            </Link>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {missions.map((mission) => (
+          {filteredMissions.map((mission) => (
             <Link
               key={mission.id}
               href={`/missions/${mission.id}`}
@@ -116,7 +185,7 @@ export default function MissionsPage() {
           ))}
         </div>
 
-        {missions.length === 0 && (
+        {filteredMissions.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">아직 미션이 없습니다.</p>
           </div>
