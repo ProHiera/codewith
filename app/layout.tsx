@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import GlobalAICoach from "@/components/GlobalAICoach";
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import AntdLayout from "@/components/AntdLayout";
 
 export const metadata: Metadata = {
   title: "CodeWith - AI 학습 파트너",
@@ -15,8 +16,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        {children}
-        <GlobalAICoach />
+        <AntdRegistry>
+          <AntdLayout>
+            {children}
+          </AntdLayout>
+        </AntdRegistry>
       </body>
     </html>
   );

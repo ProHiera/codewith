@@ -4,18 +4,41 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { Note } from '@/types/gamification';
+import { 
+  Card, 
+  Button, 
+  Space, 
+  Typography, 
+  Modal, 
+  Form, 
+  Input, 
+  Tag, 
+  Row, 
+  Col,
+  Spin,
+  Empty,
+  message
+} from 'antd';
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  RobotOutlined,
+  FileTextOutlined,
+  DashboardOutlined,
+  CommentOutlined
+} from '@ant-design/icons';
+
+const { Title, Paragraph, Text } = Typography;
+const { TextArea } = Input;
 
 export default function NotesPage() {
   const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    tags: '',
-  });
+  const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchNotes();
@@ -38,24 +61,22 @@ export default function NotesPage() {
       if (error) throw error;
       setNotes(data || []);
     } catch {
-      // Silent fail - notes not available
+      message.error('메모를 불러오는데 실패했습니다');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values: { title: string; content: string; tags: string }) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsArray = values.tags.split(',').map(t => t.trim()).filter(Boolean);
       const noteData = {
         user_id: user.id,
-        title: formData.title,
-        content: formData.content,
+        title: values.title,
+        content: values.content,
         tags: tagsArray,
         is_ai_generated: false,
       };
@@ -67,217 +88,226 @@ export default function NotesPage() {
           .eq('id', editingId);
 
         if (error) throw error;
+        message.success('메모가 수정되었습니다');
       } else {
         const { error } = await supabase
           .from('notes')
           .insert(noteData);
 
         if (error) throw error;
+        message.success('메모가 저장되었습니다');
       }
 
-      setFormData({ title: '', content: '', tags: '' });
-      setShowForm(false);
+      form.resetFields();
+      setShowModal(false);
       setEditingId(null);
       fetchNotes();
     } catch {
-      alert('저장에 실패했습니다.');
+      message.error('저장에 실패했습니다');
     }
   };
 
   const handleEdit = (note: Note) => {
-    setFormData({
+    form.setFieldsValue({
       title: note.title,
       content: note.content,
       tags: note.tags.join(', '),
     });
     setEditingId(note.id);
-    setShowForm(true);
+    setShowModal(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('정말 삭제하시겠습니까?')) return;
+    Modal.confirm({
+      title: '메모 삭제',
+      content: '정말 삭제하시겠습니까?',
+      okText: '삭제',
+      okType: 'danger',
+      cancelText: '취소',
+      async onOk() {
+        try {
+          const { error } = await supabase
+            .from('notes')
+            .delete()
+            .eq('id', id);
 
-    try {
-      const { error } = await supabase
-        .from('notes')
-        .delete()
-        .eq('id', id);
+          if (error) throw error;
+          message.success('메모가 삭제되었습니다');
+          fetchNotes();
+        } catch {
+          message.error('삭제에 실패했습니다');
+        }
+      }
+    });
+  };
 
-      if (error) throw error;
-      fetchNotes();
-    } catch {
-      // Silent fail - delete failed
-    }
+  const handleNewNote = () => {
+    form.resetFields();
+    setEditingId(null);
+    setShowModal(true);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">로딩 중...</div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Spin size="large" tip="로딩 중..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">내 메모 📝</h1>
-            <div className="space-x-4">
-              <button
-                onClick={() => router.push('/ai-coach')}
-                className="text-blue-600 hover:text-blue-500"
-              >
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'sticky', top: 64, zIndex: 100 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Title level={2} style={{ margin: 0 }}>
+              <FileTextOutlined /> 내 메모
+            </Title>
+            <Space>
+              <Button icon={<CommentOutlined />} onClick={() => router.push('/ai-coach')}>
                 AI 코치
-              </button>
-              <button
-                onClick={() => router.push('/missions')}
-                className="text-blue-600 hover:text-blue-500"
-              >
-                미션
-              </button>
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="text-blue-600 hover:text-blue-500"
-              >
+              </Button>
+              <Button icon={<DashboardOutlined />} onClick={() => router.push('/dashboard')}>
                 대시보드
-              </button>
-            </div>
+              </Button>
+            </Space>
           </div>
         </div>
-      </nav>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <button
-            onClick={() => {
-              setShowForm(!showForm);
-              setEditingId(null);
-              setFormData({ title: '', content: '', tags: '' });
-            }}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
+        <div style={{ marginBottom: 24 }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleNewNote}
           >
-            {showForm ? '취소' : '+ 새 메모'}
-          </button>
+            새 메모
+          </Button>
         </div>
 
-        {showForm && (
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-lg font-semibold mb-4">
-              {editingId ? '메모 수정' : '새 메모 작성'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  제목 *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="메모 제목"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  내용 *
-                </label>
-                <textarea
-                  required
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={6}
-                  placeholder="메모 내용을 입력하세요..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  태그 (쉼표로 구분)
-                </label>
-                <input
-                  type="text"
-                  value={formData.tags}
-                  onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="예: javascript, react, 학습"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-              >
-                {editingId ? '수정하기' : '저장하기'}
-              </button>
-            </form>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {notes.map((note) => (
-            <div key={note.id} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-gray-900 flex-1">
-                  {note.title}
-                </h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(note)}
-                    className="text-blue-500 hover:text-blue-600"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => handleDelete(note.id)}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-
-              {note.is_ai_generated && (
-                <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded mb-2">
-                  🤖 AI 생성
-                </span>
-              )}
-
-              <p className="text-sm text-gray-600 mb-4 line-clamp-4 whitespace-pre-wrap">
-                {note.content}
-              </p>
-
-              {note.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {note.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+        {notes.length === 0 ? (
+          <Card>
+            <Empty description="아직 메모가 없습니다. 첫 메모를 작성해보세요!" />
+          </Card>
+        ) : (
+          <Row gutter={[16, 16]}>
+            {notes.map((note) => (
+              <Col xs={24} md={12} lg={8} key={note.id}>
+                <Card
+                  hoverable
+                  actions={[
+                    <Button
+                      key="edit"
+                      type="text"
+                      icon={<EditOutlined />}
+                      onClick={() => handleEdit(note)}
                     >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+                      수정
+                    </Button>,
+                    <Button
+                      key="delete"
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(note.id)}
+                    >
+                      삭제
+                    </Button>
+                  ]}
+                >
+                  <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                      <Title level={4} style={{ margin: 0 }}>{note.title}</Title>
+                      {note.is_ai_generated && (
+                        <Tag icon={<RobotOutlined />} color="purple">
+                          AI 생성
+                        </Tag>
+                      )}
+                    </div>
 
-              <p className="text-xs text-gray-400">
-                {new Date(note.created_at).toLocaleDateString('ko-KR')}
-              </p>
-            </div>
-          ))}
-        </div>
+                    <Paragraph
+                      ellipsis={{ rows: 4 }}
+                      style={{ marginBottom: 12, whiteSpace: 'pre-wrap' }}
+                    >
+                      {note.content}
+                    </Paragraph>
 
-        {notes.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">아직 메모가 없습니다. 첫 메모를 작성해보세요!</p>
-          </div>
+                    {note.tags.length > 0 && (
+                      <Space wrap>
+                        {note.tags.map((tag, idx) => (
+                          <Tag key={idx} color="blue">#{tag}</Tag>
+                        ))}
+                      </Space>
+                    )}
+
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {new Date(note.created_at).toLocaleDateString('ko-KR')}
+                    </Text>
+                  </Space>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
+
+      <Modal
+        title={editingId ? '메모 수정' : '새 메모 작성'}
+        open={showModal}
+        onCancel={() => {
+          setShowModal(false);
+          setEditingId(null);
+          form.resetFields();
+        }}
+        footer={null}
+        width={600}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+        >
+          <Form.Item
+            name="title"
+            label="제목"
+            rules={[{ required: true, message: '제목을 입력해주세요' }]}
+          >
+            <Input placeholder="메모 제목" size="large" />
+          </Form.Item>
+
+          <Form.Item
+            name="content"
+            label="내용"
+            rules={[{ required: true, message: '내용을 입력해주세요' }]}
+          >
+            <TextArea
+              rows={8}
+              placeholder="메모 내용을 입력하세요..."
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="tags"
+            label="태그 (쉼표로 구분)"
+          >
+            <Input placeholder="예: javascript, react, 학습" size="large" />
+          </Form.Item>
+
+          <Form.Item>
+            <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+              <Button onClick={() => setShowModal(false)}>
+                취소
+              </Button>
+              <Button type="primary" htmlType="submit">
+                {editingId ? '수정하기' : '저장하기'}
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

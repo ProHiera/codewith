@@ -5,6 +5,29 @@ import { supabase } from '@/lib/supabase/client';
 import { Mission } from '@/types';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { 
+  Card, 
+  Row, 
+  Col, 
+  Tag, 
+  Button, 
+  Space, 
+  Typography, 
+  Spin,
+  Empty
+} from 'antd';
+import {
+  TrophyOutlined,
+  RobotOutlined,
+  FileTextOutlined,
+  DashboardOutlined,
+  FolderOutlined,
+  BugOutlined,
+  ClockCircleOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
+
+const { Title, Paragraph, Text } = Typography;
 
 export default function MissionsPage() {
   const router = useRouter();
@@ -14,13 +37,11 @@ export default function MissionsPage() {
 
   useEffect(() => {
     const run = async () => {
-      // auth check
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login');
         return;
       }
-      // fetch missions
       try {
         const { data, error } = await supabase
           .from('missions')
@@ -30,7 +51,7 @@ export default function MissionsPage() {
         if (error) throw error;
         setMissions(data || []);
       } catch {
-        // Silent fail - missions not available
+        // Silent fail
       } finally {
         setLoading(false);
       }
@@ -38,13 +59,9 @@ export default function MissionsPage() {
     void run();
   }, [router]);
 
-  // deprecated individual fns replaced by single effect above
-
-  // query filters: ?domain=frontend|backend|data|devops & ?lang=js|react|css|...
   const selectedDomain = (searchParams.get('domain') || '').toLowerCase();
   const selectedLang = (searchParams.get('lang') || '').toLowerCase();
 
-  // map catalog langs to mission.type
   const langToMissionType: Record<string, Mission['type']> = {
     js: 'javascript',
     javascript: 'javascript',
@@ -60,135 +77,127 @@ export default function MissionsPage() {
   } as const;
 
   const filteredMissions = missions.filter((m) => {
-    // filter by lang first if provided
     if (selectedLang) {
       const t = langToMissionType[selectedLang];
       if (t && m.type !== t) return false;
-      // if unsupported lang provided, fall through (no filtering)
     }
-    // filter by domain if provided
     if (selectedDomain) {
       const allowed = domainToTypes[selectedDomain];
       if (Array.isArray(allowed)) {
-        if (allowed.length === 0) return false; // no missions mapped yet
+        if (allowed.length === 0) return false;
         if (!allowed.includes(m.type)) return false;
       }
     }
     return true;
   });
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'css': return 'blue';
+      case 'javascript': return 'gold';
+      case 'react': return 'green';
+      default: return 'red';
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">로딩 중...</div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Spin size="large" tip="로딩 중..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">오늘의 미션</h1>
-            <div className="space-x-4">
-              <Link href="/ai-coach" className="text-blue-600 hover:text-blue-500">
-                🤖 AI 코치
-              </Link>
-              <Link href="/notes" className="text-blue-600 hover:text-blue-500">
-                📝 메모
-              </Link>
-              <Link href="/dashboard" className="text-blue-600 hover:text-blue-500">
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Title level={2} style={{ margin: 0 }}>
+              <TrophyOutlined /> 오늘의 미션
+            </Title>
+            <Space>
+              <Button icon={<RobotOutlined />} onClick={() => router.push('/ai-coach')}>
+                AI 코치
+              </Button>
+              <Button icon={<FileTextOutlined />} onClick={() => router.push('/notes')}>
+                메모
+              </Button>
+              <Button icon={<DashboardOutlined />} onClick={() => router.push('/dashboard')}>
                 대시보드
-              </Link>
-              <Link href="/portfolio" className="text-blue-600 hover:text-blue-500">
+              </Button>
+              <Button icon={<FolderOutlined />} onClick={() => router.push('/portfolio')}>
                 포트폴리오
-              </Link>
-              <Link href="/error-doctor" className="text-blue-600 hover:text-blue-500">
+              </Button>
+              <Button icon={<BugOutlined />} onClick={() => router.push('/error-doctor')}>
                 에러 닥터
-              </Link>
-            </div>
+              </Button>
+            </Space>
           </div>
         </div>
-      </nav>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
         {(selectedDomain || selectedLang) && (
-          <div className="mb-6 flex flex-wrap items-center gap-2 text-sm">
-            <span className="text-gray-500">필터:</span>
+          <Space style={{ marginBottom: 24 }} wrap>
+            <Text type="secondary">필터:</Text>
             {selectedDomain && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+              <Tag
+                closable
+                onClose={() => router.push(`/missions${selectedLang ? `?lang=${selectedLang}` : ''}`)}
+              >
                 도메인: {selectedDomain}
-                <Link
-                  prefetch={false}
-                  href={{ pathname: '/missions', query: selectedLang ? { lang: selectedLang } : {} }}
-                  className="ml-1 text-gray-500 hover:text-gray-700"
-                  aria-label="도메인 필터 해제"
-                >
-                  ✕
-                </Link>
-              </span>
+              </Tag>
             )}
             {selectedLang && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+              <Tag
+                closable
+                onClose={() => router.push(`/missions${selectedDomain ? `?domain=${selectedDomain}` : ''}`)}
+              >
                 언어: {selectedLang}
-                <Link
-                  prefetch={false}
-                  href={{ pathname: '/missions', query: selectedDomain ? { domain: selectedDomain } : {} }}
-                  className="ml-1 text-gray-500 hover:text-gray-700"
-                  aria-label="언어 필터 해제"
-                >
-                  ✕
-                </Link>
-              </span>
+              </Tag>
             )}
-            <Link prefetch={false} href="/missions" className="text-blue-600 hover:text-blue-500">
-              모두 보기
+            <Link href="/missions">
+              <Button type="link" size="small">모두 보기</Button>
             </Link>
-          </div>
+          </Space>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMissions.map((mission) => (
-            <Link
-              key={mission.id}
-              href={`/missions/${mission.id}`}
-              className="block bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                    mission.type === 'css' ? 'bg-blue-100 text-blue-800' :
-                    mission.type === 'javascript' ? 'bg-yellow-100 text-yellow-800' :
-                    mission.type === 'react' ? 'bg-green-100 text-green-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {mission.type.toUpperCase()}
-                  </span>
-                </div>
-              </div>
-              
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                {mission.title}
-              </h3>
-              
-              <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-                {mission.spec_json?.description || '미션을 완료하세요'}
-              </p>
-              
-              <div className="mt-4 flex items-center text-sm text-gray-500">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                10-15분
-              </div>
-            </Link>
-          ))}
-        </div>
 
-        {filteredMissions.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">아직 미션이 없습니다.</p>
-          </div>
+        {filteredMissions.length === 0 ? (
+          <Card>
+            <Empty description="아직 미션이 없습니다." />
+          </Card>
+        ) : (
+          <Row gutter={[16, 16]}>
+            {filteredMissions.map((mission) => (
+              <Col xs={24} md={12} lg={8} key={mission.id}>
+                <Link href={`/missions/${mission.id}`}>
+                  <Card hoverable style={{ height: '100%' }}>
+                    <div style={{ marginBottom: 12 }}>
+                      <Tag color={getTypeColor(mission.type)}>
+                        {mission.type.toUpperCase()}
+                      </Tag>
+                    </div>
+                    
+                    <Title level={4} style={{ marginTop: 12 }}>
+                      {mission.title}
+                    </Title>
+                    
+                    <Paragraph ellipsis={{ rows: 2 }} type="secondary">
+                      {mission.spec_json?.description || '미션을 완료하세요'}
+                    </Paragraph>
+                    
+                    <div style={{ marginTop: 16 }}>
+                      <Space>
+                        <ClockCircleOutlined />
+                        <Text type="secondary" style={{ fontSize: 12 }}>10-15분</Text>
+                      </Space>
+                    </div>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </div>

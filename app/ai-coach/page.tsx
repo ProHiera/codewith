@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
+import { Card, Input, Button, Space, Typography, List, Avatar, Spin } from 'antd';
+import { 
+  SendOutlined, 
+  RobotOutlined,
+  UserOutlined,
+  BulbOutlined
+} from '@ant-design/icons';
+
+const { Title, Paragraph, Text } = Typography;
+const { TextArea } = Input;
 
 interface Message {
   role: 'user' | 'assistant';
@@ -45,39 +54,25 @@ export default function AICoachPage() {
     setLoading(true);
 
     try {
-      // Call AI API
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-        }),
+        body: JSON.stringify({ message: messageText }),
       });
 
       const data = await response.json();
 
-      const aiMessage: Message = {
+      const assistantMessage: Message = {
         role: 'assistant',
-        content: data.response,
+        content: data.reply || '죄송합니다. 응답을 생성할 수 없습니다.',
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
-
-      // Save conversation to database
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from('ai_conversations').upsert({
-          user_id: user.id,
-          messages: [...messages, userMessage, aiMessage],
-          context_type: 'general',
-        });
-      }
-    } catch (error) {
-      // Silent fail - show user-facing error message
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch {
       const errorMessage: Message = {
         role: 'assistant',
-        content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
+        content: '오류가 발생했습니다. 다시 시도해주세요.',
         timestamp: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -86,157 +81,101 @@ export default function AICoachPage() {
     }
   };
 
-  const saveAsNote = async (content: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const title = content.substring(0, 50) + (content.length > 50 ? '...' : '');
-      
-      await supabase.from('notes').insert({
-        user_id: user.id,
-        title,
-        content,
-        is_ai_generated: true,
-        tags: ['ai-coach'],
-      });
-
-      alert('메모로 저장되었습니다!');
-    } catch (error) {
-      // Silent fail - alert handles user feedback
-      alert('저장에 실패했습니다.');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">AI 개발 코치 🤖</h1>
-            <div className="space-x-4">
-              <button
-                onClick={() => router.push('/missions')}
-                className="text-blue-600 hover:text-blue-500"
-              >
-                미션
-              </button>
-              <button
-                onClick={() => router.push('/notes')}
-                className="text-blue-600 hover:text-blue-500"
-              >
-                내 메모
-              </button>
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="text-blue-600 hover:text-blue-500"
-              >
-                대시보드
-              </button>
-            </div>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={1}>
+              <RobotOutlined /> AI 개발 코치
+            </Title>
+            <Paragraph>
+              코딩 문제부터 커리어 고민까지, 무엇이든 물어보세요!
+            </Paragraph>
           </div>
-        </div>
-      </nav>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Quick Questions */}
-        <div className="mb-6">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">자주 묻는 질문</h3>
-          <div className="flex flex-wrap gap-2">
-            {quickQuestions.map((question, idx) => (
-              <button
+          <Space wrap>
+            {quickQuestions.map((q, idx) => (
+              <Button
                 key={idx}
-                onClick={() => handleSend(question)}
-                className="px-3 py-2 bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm transition-colors"
+                icon={<BulbOutlined />}
+                onClick={() => handleSend(q)}
+                disabled={loading}
               >
-                {question}
-              </button>
+                {q}
+              </Button>
             ))}
-          </div>
-        </div>
+          </Space>
 
-        {/* Chat Messages */}
-        <div className="bg-white rounded-lg shadow mb-4">
-          <div className="h-[500px] overflow-y-auto p-6 space-y-4">
-            {messages.map((message, idx) => (
-              <div
-                key={idx}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg p-4 ${
-                    message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                  }`}
-                >
-                  <div className="flex items-start gap-2 mb-1">
-                    <span className="text-2xl">
-                      {message.role === 'user' ? '👤' : '🤖'}
-                    </span>
-                    <div className="flex-1">
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                      {message.role === 'assistant' && (
-                        <button
-                          onClick={() => saveAsNote(message.content)}
-                          className="mt-2 text-xs underline opacity-70 hover:opacity-100"
-                        >
-                          📝 메모로 저장
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <p
-                    className={`text-xs mt-2 ${
-                      message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
-                    }`}
-                  >
-                    {new Date(message.timestamp).toLocaleTimeString('ko-KR')}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <Card style={{ minHeight: '60vh', maxHeight: '70vh', overflow: 'auto' }}>
+            <List
+              dataSource={messages}
+              renderItem={(msg) => (
+                <List.Item style={{ border: 'none' }}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        icon={msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />}
+                        style={{ background: msg.role === 'user' ? '#1890ff' : '#52c41a' }}
+                      />
+                    }
+                    title={msg.role === 'user' ? '나' : 'AI 코치'}
+                    description={
+                      <div style={{ whiteSpace: 'pre-wrap', marginTop: 8 }}>
+                        <Text>{msg.content}</Text>
+                        <br />
+                        <Text type="secondary" style={{ fontSize: 12 }}>
+                          {new Date(msg.timestamp).toLocaleTimeString('ko-KR')}
+                        </Text>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
             {loading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🤖</span>
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                      <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-                      <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
-                    </div>
-                  </div>
-                </div>
+              <div style={{ textAlign: 'center', padding: 20 }}>
+                <Spin tip="AI가 생각 중..." />
               </div>
             )}
-          </div>
-        </div>
+          </Card>
 
-        {/* Input */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="무엇이든 물어보세요..."
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={loading}
-            />
-            <button
-              onClick={() => handleSend()}
-              disabled={loading || !input.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-            >
-              전송
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            💡 AI 응답은 참고용입니다. 중요한 결정은 공식 문서를 확인하세요.
-          </p>
-        </div>
+          <Card>
+            <Space.Compact style={{ width: '100%' }}>
+              <TextArea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="질문을 입력하세요..."
+                autoSize={{ minRows: 2, maxRows: 6 }}
+                onPressEnter={(e) => {
+                  if (!e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                disabled={loading}
+              />
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                onClick={() => handleSend()}
+                loading={loading}
+                style={{ height: 'auto' }}
+              >
+                전송
+              </Button>
+            </Space.Compact>
+          </Card>
+
+          <Card style={{ background: '#fffbe6', border: '1px solid #ffe58f' }}>
+            <Text strong>💡 더 나은 답변을 받으려면:</Text>
+            <ul style={{ marginTop: 8, marginBottom: 0 }}>
+              <li>구체적인 코드나 에러 메시지를 포함하세요</li>
+              <li>무엇을 시도했는지 설명해주세요</li>
+              <li>원하는 결과를 명확히 해주세요</li>
+            </ul>
+          </Card>
+        </Space>
       </div>
     </div>
   );
