@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Card, Space, Typography } from 'antd';
+import { BookOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
@@ -13,7 +14,7 @@ export default function Page() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div>
-            <Title level={1}>📚 JavaScript 치트시트</Title>
+            <Title level={1}><BookOutlined /> JavaScript 치트시트</Title>
             <Paragraph style={{ fontSize: 16 }}>
               자주 사용하는 JavaScript 문법과 패턴을 빠르게 찾아보세요
             </Paragraph>

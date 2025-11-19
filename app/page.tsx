@@ -24,7 +24,8 @@ import {
   CheckCircleOutlined,
   FireOutlined,
   BookOutlined,
-  ExperimentOutlined
+  ExperimentOutlined,
+  ToolOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -224,7 +225,7 @@ export default function HomePage() {
       <div style={{ padding: '80px 24px', background: '#f5f5f5' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <Title level={2} style={{ textAlign: 'center', marginBottom: 48 }}>
-            🚀 주요 기능
+            <RocketOutlined /> 주요 기능
           </Title>
 
           <Row gutter={[24, 24]}>
@@ -258,7 +259,7 @@ export default function HomePage() {
       <div style={{ padding: '80px 24px', background: 'white' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <Title level={2} style={{ textAlign: 'center', marginBottom: 16 }}>
-            🛠️ 모든 학습 도구
+            <ToolOutlined /> 모든 학습 도구
           </Title>
           <Paragraph style={{ textAlign: 'center', fontSize: 16, color: '#666', marginBottom: 48 }}>
             개발부터 배포까지, 20개 이상의 실전 도구로 실력을 키워보세요
@@ -290,7 +291,7 @@ export default function HomePage() {
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <Title level={2} style={{ color: 'white', marginBottom: 16 }}>
-            지금 바로 시작하세요! 🚀
+            지금 바로 시작하세요! <RocketOutlined />
           </Title>
           <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, marginBottom: 32 }}>
             회원가입 30초면 끝! AI와 함께하는 즐거운 코딩 학습

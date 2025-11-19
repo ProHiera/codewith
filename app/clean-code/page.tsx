@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Typography, Space, Collapse, Tag } from 'antd';
-import { CodeOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { CodeOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
@@ -53,12 +53,12 @@ export default function CleanCodePage() {
               <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                 <Paragraph>{principle.description}</Paragraph>
                 <Collapse>
-                  <Collapse.Panel header={<Tag color="red">❌ 나쁜 예</Tag>} key="bad">
+                  <Collapse.Panel header={<Tag color="red" icon={<CloseCircleOutlined />}>나쁜 예</Tag>} key="bad">
                     <pre style={{ background: '#fff1f0', padding: 12, borderRadius: 8, overflow: 'auto' }}>
                       {principle.bad}
                     </pre>
                   </Collapse.Panel>
-                  <Collapse.Panel header={<Tag color="green">✅ 좋은 예</Tag>} key="good">
+                  <Collapse.Panel header={<Tag color="green" icon={<CheckCircleOutlined />}>좋은 예</Tag>} key="good">
                     <pre style={{ background: '#f6ffed', padding: 12, borderRadius: 8, overflow: 'auto' }}>
                       {principle.good}
                     </pre>

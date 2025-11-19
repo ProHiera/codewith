@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Card, Input, Button, Space, Typography, List, Avatar, Spin } from 'antd';
 import { 
   SendOutlined, 
@@ -20,11 +19,10 @@ interface Message {
 }
 
 export default function AICoachPage() {
-  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: '안녕하세요! 저는 당신의 전용 개발 코치입니다. 🤖\n\n코딩 문제, 개념 이해, 커리어 고민 등 무엇이든 물어보세요!\n\n💡 팁: 구체적인 코드나 에러 메시지를 공유하면 더 정확한 도움을 드릴 수 있어요.',
+      content: '안녕하세요! 저는 당신의 전용 개발 코치입니다.\n\n코딩 문제, 개념 이해, 커리어 고민 등 무엇이든 물어보세요!\n\n팁: 구체적인 코드나 에러 메시지를 공유하면 더 정확한 도움을 드릴 수 있어요.',
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -32,11 +30,11 @@ export default function AICoachPage() {
   const [loading, setLoading] = useState(false);
 
   const quickQuestions = [
-    '🎯 CSS Flexbox를 쉽게 설명해주세요',
-    '🔧 async/await와 Promise의 차이는?',
-    '📚 React Hook 사용법 알려주세요',
-    '💼 주니어 개발자 취업 팁',
-    '🐛 디버깅 잘하는 방법',
+    'CSS Flexbox를 쉽게 설명해주세요',
+    'async/await와 Promise의 차이는?',
+    'React Hook 사용법 알려주세요',
+    '주니어 개발자 취업 팁',
+    '디버깅 잘하는 방법',
   ];
 
   const handleSend = async (text?: string) => {
@@ -168,7 +166,7 @@ export default function AICoachPage() {
           </Card>
 
           <Card style={{ background: '#fffbe6', border: '1px solid #ffe58f' }}>
-            <Text strong>💡 더 나은 답변을 받으려면:</Text>
+            <Text strong><BulbOutlined /> 더 나은 답변을 받으려면:</Text>
             <ul style={{ marginTop: 8, marginBottom: 0 }}>
               <li>구체적인 코드나 에러 메시지를 포함하세요</li>
               <li>무엇을 시도했는지 설명해주세요</li>

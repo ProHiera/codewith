@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 import { Card, Typography, Form, Input, Button, Space, Alert, Radio } from 'antd';
-import { GitlabOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { 
+  GitlabOutlined, 
+  ThunderboltOutlined,
+  StarOutlined,
+  BugOutlined,
+  FileTextOutlined,
+  FormatPainterOutlined,
+  ReloadOutlined
+} from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -47,11 +55,11 @@ export default function CommitAssistantPage() {
                 initialValue="feat"
               >
                 <Radio.Group>
-                  <Radio.Button value="feat">✨ feat</Radio.Button>
-                  <Radio.Button value="fix">🐛 fix</Radio.Button>
-                  <Radio.Button value="docs">📝 docs</Radio.Button>
-                  <Radio.Button value="style">💄 style</Radio.Button>
-                  <Radio.Button value="refactor">♻️ refactor</Radio.Button>
+                  <Radio.Button value="feat"><StarOutlined /> feat</Radio.Button>
+                  <Radio.Button value="fix"><BugOutlined /> fix</Radio.Button>
+                  <Radio.Button value="docs"><FileTextOutlined /> docs</Radio.Button>
+                  <Radio.Button value="style"><FormatPainterOutlined /> style</Radio.Button>
+                  <Radio.Button value="refactor"><ReloadOutlined /> refactor</Radio.Button>
                 </Radio.Group>
               </Form.Item>
 

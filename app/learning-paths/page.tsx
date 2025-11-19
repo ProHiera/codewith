@@ -21,7 +21,11 @@ import {
   ClockCircleOutlined,
   FireOutlined,
   CheckCircleOutlined,
-  BulbOutlined
+  BulbOutlined,
+  AimOutlined,
+  BgColorsOutlined,
+  ExperimentOutlined,
+  ToolOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -29,7 +33,7 @@ const { Title, Paragraph, Text } = Typography;
 type PathPreset = {
   id: string;
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   description: string;
   duration: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
@@ -49,7 +53,7 @@ const PRESETS: PathPreset[] = [
   {
     id: 'frontend-basics',
     title: '프론트엔드 기초',
-    icon: '🎨',
+    icon: <BgColorsOutlined style={{ fontSize: 24 }} />,
     description: 'HTML, CSS, JavaScript 기초부터 React까지',
     duration: '12주',
     difficulty: 'beginner',
@@ -85,7 +89,7 @@ const PRESETS: PathPreset[] = [
   {
     id: 'react-deep-dive',
     title: 'React 심화',
-    icon: '⚛️',
+    icon: <ExperimentOutlined style={{ fontSize: 24 }} />,
     description: 'React Hooks부터 성능 최적화까지',
     duration: '8주',
     difficulty: 'intermediate',
@@ -121,7 +125,7 @@ const PRESETS: PathPreset[] = [
   {
     id: 'backend-nodejs',
     title: 'Node.js 백엔드',
-    icon: '🔧',
+    icon: <ToolOutlined style={{ fontSize: 24 }} />,
     description: 'Express부터 데이터베이스 연동까지',
     duration: '10주',
     difficulty: 'intermediate',
@@ -157,7 +161,7 @@ const PRESETS: PathPreset[] = [
   {
     id: 'fullstack-swe',
     title: '풀스택 개발자',
-    icon: '🚀',
+    icon: <RocketOutlined style={{ fontSize: 24 }} />,
     description: '프론트엔드부터 백엔드, 배포까지 전체 과정',
     duration: '16주',
     difficulty: 'advanced',
@@ -414,7 +418,7 @@ export default function LearningPathsPage() {
                         description: (
                           <div style={{ marginTop: 8 }}>
                             <div style={{ marginBottom: 8 }}>
-                              <Text strong>📚 학습 내용</Text>
+                              <Text strong><BookOutlined /> 학습 내용</Text>
                               <ul style={{ marginTop: 4, paddingLeft: 20 }}>
                                 {step.topics.map((topic, i) => (
                                   <li key={i}><Text type="secondary">{topic}</Text></li>
@@ -422,7 +426,7 @@ export default function LearningPathsPage() {
                               </ul>
                             </div>
                             <div>
-                              <Text strong>🎯 목표</Text>
+                              <Text strong><AimOutlined /> 목표</Text>
                               <ul style={{ marginTop: 4, paddingLeft: 20 }}>
                                 {step.goals.map((goal, i) => (
                                   <li key={i}><Text type="secondary">{goal}</Text></li>

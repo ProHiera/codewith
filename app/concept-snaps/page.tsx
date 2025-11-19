@@ -7,7 +7,8 @@ import {
   LeftOutlined,
   RightOutlined,
   CheckCircleOutlined,
-  CloseOutlined
+  CloseOutlined,
+  BulbOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -98,14 +99,14 @@ const concepts: ConceptSnap[] = [
         title: 'Promise 기본',
         code: 'const promise = new Promise((resolve, reject) => {\n  setTimeout(() => resolve("완료!"), 1000)\n})\n\npromise.then(result => console.log(result))',
         explanation: 'Promise는 비동기 작업의 완료 또는 실패를 나타내는 객체입니다.',
-        visual: '⏳ → ✅'
+        visual: '비동기 처리'
       },
       {
         step: 2,
         title: 'async 함수',
         code: 'async function fetchData() {\n  return "데이터"\n}\n\n// 자동으로 Promise를 반환\nfetchData().then(data => console.log(data))',
         explanation: 'async 함수는 항상 Promise를 반환합니다. return 값이 자동으로 resolve됩니다.',
-        visual: '🔄 자동 Promise 변환'
+        visual: '자동 Promise 변환'
       }
     ]
   },
@@ -120,14 +121,14 @@ const concepts: ConceptSnap[] = [
         title: '클로저란?',
         code: 'function outer() {\n  const secret = "비밀"\n  \n  function inner() {\n    console.log(secret) // 접근 가능!\n  }\n  \n  return inner\n}',
         explanation: '함수가 자신이 선언된 환경(스코프)을 기억하는 것을 클로저라고 합니다.',
-        visual: '🎁 환경을 담은 함수'
+        visual: '환경을 담은 함수'
       },
       {
         step: 2,
         title: '실용적인 예제',
         code: 'function createCounter() {\n  let count = 0\n  \n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    getCount: () => count\n  }\n}',
         explanation: '클로저로 private 변수를 만들 수 있습니다. count는 외부에서 직접 접근 불가!',
-        visual: '🔒 캡슐화'
+        visual: '캡슐화'
       }
     ]
   }
@@ -336,7 +337,7 @@ export default function ConceptSnapsPage() {
 
           {!selectedConcept && (
             <Card style={{ background: 'linear-gradient(135deg, #f6f0ff 0%, #e6ccff 100%)', border: 'none' }}>
-              <Title level={4}>💡 효과적인 학습 방법</Title>
+              <Title level={4}><BulbOutlined /> 효과적인 학습 방법</Title>
               <Space direction="vertical">
                 <div style={{ display: 'flex', gap: 8 }}>
                   <Text strong style={{ color: '#722ed1' }}>1.</Text>

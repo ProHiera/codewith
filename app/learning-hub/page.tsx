@@ -26,7 +26,10 @@ import {
   StarOutlined,
   LikeOutlined,
   CommentOutlined,
-  DashboardOutlined
+  DashboardOutlined,
+  ThunderboltOutlined,
+  GlobalOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -90,9 +93,9 @@ export default function LearningHubPage() {
   ];
 
   const practiceItems = [
-    { id: 1, name: 'useState', emoji: '📦', description: '상태 관리', color: '#1890ff' },
-    { id: 2, name: 'useEffect', emoji: '⚡', description: '부수 효과', color: '#722ed1' },
-    { id: 3, name: 'useContext', emoji: '🌐', description: '컨텍스트', color: '#52c41a' },
+    { id: 1, name: 'useState', icon: <AppstoreOutlined />, description: '상태 관리', color: '#1890ff' },
+    { id: 2, name: 'useEffect', icon: <ThunderboltOutlined />, description: '부수 효과', color: '#722ed1' },
+    { id: 3, name: 'useContext', icon: <GlobalOutlined />, description: '컨텍스트', color: '#52c41a' },
   ];
 
   const communityPosts = [
@@ -216,7 +219,7 @@ export default function LearningHubPage() {
                         style={{ borderLeft: `4px solid ${item.color}` }}
                       >
                         <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                          <div style={{ fontSize: 48, textAlign: 'center' }}>{item.emoji}</div>
+                          <div style={{ fontSize: 48, textAlign: 'center' }}>{item.icon}</div>
                           <Title level={4} style={{ textAlign: 'center', margin: 0 }}>{item.name}</Title>
                           <Text type="secondary" style={{ textAlign: 'center', display: 'block' }}>
                             {item.description}
