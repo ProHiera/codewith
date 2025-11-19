@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, Typography, Space, Button, Alert, Spin, Tag, Timeline } from 'antd';
+import { Card, Typography, Space, Button, Spin, Tag, Timeline } from 'antd';
 import { ThunderboltOutlined, ClockCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;

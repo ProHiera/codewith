@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, Typography, Space, Button, Radio, Alert, Progress, Tag } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, TrophyOutlined } from '@ant-design/icons';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const questions = [
   {

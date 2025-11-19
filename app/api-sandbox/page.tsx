@@ -9,7 +9,7 @@ const { TextArea } = Input;
 
 export default function ApiSandboxPage() {
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<{ status?: number; data?: unknown; error?: string } | null>(null);
 
   const handleRequest = async (values: { method: string; url: string; body: string }) => {
     setLoading(true);
@@ -21,8 +21,8 @@ export default function ApiSandboxPage() {
       });
       const data = await res.json();
       setResponse({ status: res.status, data });
-    } catch (error: any) {
-      setResponse({ error: error.message });
+    } catch (error) {
+      setResponse({ error: error instanceof Error ? error.message : '알 수 없는 오류' });
     } finally {
       setLoading(false);
     }

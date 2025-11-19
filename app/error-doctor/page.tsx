@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, Typography, Form, Input, Button, Space, Alert, Tag } from 'antd';
+import { Card, Typography, Form, Input, Button, Space, Alert } from 'antd';
 import { BugOutlined, SearchOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
@@ -9,7 +9,7 @@ const { TextArea } = Input;
 
 export default function ErrorDoctorPage() {
   const [loading, setLoading] = useState(false);
-  const [diagnosis, setDiagnosis] = useState<any>(null);
+  const [diagnosis, setDiagnosis] = useState<{ cause?: string; solution?: string; examples?: string } | null>(null);
 
   const handleDiagnose = async (values: { errorMessage: string; code: string }) => {
     setLoading(true);

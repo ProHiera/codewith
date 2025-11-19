@@ -20,14 +20,12 @@ import {
 } from 'antd';
 import {
   PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
   GithubOutlined,
   GlobalOutlined,
   FolderOutlined
 } from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 export default function PortfolioPage() {
@@ -40,6 +38,7 @@ export default function PortfolioPage() {
   useEffect(() => {
     checkUser();
     fetchProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkUser = async () => {
@@ -136,7 +135,10 @@ export default function PortfolioPage() {
                       {project.summary}
                     </Paragraph>
                     <Space wrap>
-                      {project.stack.split(',').map((tech, idx) => (
+                      {(Array.isArray(project.stack) 
+                        ? project.stack 
+                        : (project.stack as string).split(',')
+                      ).map((tech: string, idx: number) => (
                         <Tag key={idx} color="blue">{tech.trim()}</Tag>
                       ))}
                     </Space>
