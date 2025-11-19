@@ -138,7 +138,7 @@ export class ErrorDoctor {
 심각도: ${analysis.severity.toUpperCase()}
   ↓
 해결 단계:
-${analysis.steps.map((step, i) => `  ${step}`).join('\n')}
+${analysis.steps.map((step) => `  ${step}`).join('\n')}
 ${analysis.fixPatch ? `\n수정 패치:\n${analysis.fixPatch}` : ''}
     `.trim();
   }

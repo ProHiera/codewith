@@ -41,16 +41,15 @@ export default function QuizPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <QuestionCircleOutlined /> 퀴즈
-              </Title>
-              <Progress percent={Math.round(((current + 1) / questions.length) * 100)} />
-            </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <QuestionCircleOutlined /> 퀴즈
+            </Title>
+            <Progress percent={Math.round(((current + 1) / questions.length) * 100)} />
+          </div>
 
             <Card size="small" style={{ background: '#fafafa' }}>
               <Space direction="vertical" size="middle" style={{ width: '100%' }}>
@@ -105,7 +104,6 @@ export default function QuizPage() {
             </Card>
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

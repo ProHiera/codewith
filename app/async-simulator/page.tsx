@@ -40,11 +40,10 @@ export default function AsyncSimulatorPage() {
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
               <Title level={2}>
                 <ThunderboltOutlined /> 비동기 처리 시뮬레이터
               </Title>
@@ -90,7 +89,6 @@ export default function AsyncSimulatorPage() {
             )}
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

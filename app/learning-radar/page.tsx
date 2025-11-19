@@ -16,11 +16,10 @@ const skills = [
 
 export default function LearningRadarPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
               <Title level={2}>
                 <RadarChartOutlined /> 학습 레이더 차트
               </Title>
@@ -55,7 +54,7 @@ export default function LearningRadarPage() {
             </Row>
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
+    </Space>
   );
 }

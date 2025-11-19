@@ -29,16 +29,15 @@ export default function ApiSandboxPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <ApiOutlined /> API 샌드박스
-              </Title>
-              <Paragraph>REST API 요청을 테스트하고 응답을 확인해보세요.</Paragraph>
-            </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <ApiOutlined /> API 샌드박스
+            </Title>
+            <Paragraph>REST API 요청을 테스트하고 응답을 확인해보세요.</Paragraph>
+          </div>
 
             <Form layout="vertical" onFinish={handleRequest}>
               <Form.Item name="method" label="HTTP 메서드" initialValue="GET">
@@ -91,7 +90,6 @@ export default function ApiSandboxPage() {
             )}
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

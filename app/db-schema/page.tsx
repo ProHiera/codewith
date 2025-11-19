@@ -38,15 +38,15 @@ export default function DbSchemaPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <DatabaseOutlined /> 데이터베이스 스키마
-              </Title>
-              <Paragraph>프로젝트의 데이터베이스 테이블 구조를 확인하세요.</Paragraph>
-            </div>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <Card>
+            <Title level={2}>
+              <DatabaseOutlined /> 데이터베이스 스키마
+            </Title>
+            <Paragraph>프로젝트의 데이터베이스 테이블 구조를 확인하세요.</Paragraph>
+          </Card>
 
+          <Card>
             <Tabs
               items={Object.entries(schemas).map(([tableName, schema]) => ({
                 key: tableName,
@@ -81,8 +81,8 @@ export default function DbSchemaPage() {
                 ),
               }))}
             />
-          </Space>
-        </Card>
+          </Card>
+        </Space>
       </div>
     </div>
   );

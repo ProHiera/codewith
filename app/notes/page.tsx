@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { Note } from '@/types/gamification';
@@ -40,11 +40,7 @@ export default function NotesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -65,7 +61,11 @@ export default function NotesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
   const handleSubmit = async (values: { title: string; content: string; tags: string }) => {
     try {
@@ -156,36 +156,24 @@ export default function NotesPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'sticky', top: 64, zIndex: 100 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>
-              <FileTextOutlined /> 내 메모
-            </Title>
-            <Space>
-              <Button icon={<CommentOutlined />} onClick={() => router.push('/ai-coach')}>
-                AI 코치
-              </Button>
-              <Button icon={<DashboardOutlined />} onClick={() => router.push('/dashboard')}>
-                대시보드
-              </Button>
-            </Space>
-          </div>
-        </div>
-      </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={2} style={{ margin: 0 }}>
+            <FileTextOutlined /> 내 메모
+          </Title>
+          <Space>
+            <Button icon={<CommentOutlined />} onClick={() => router.push('/ai-coach')}>AI 코치</Button>
+            <Button icon={<DashboardOutlined />} onClick={() => router.push('/dashboard')}>대시보드</Button>
+          </Space>
+        </Space>
+      </Card>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
-        <div style={{ marginBottom: 24 }}>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={handleNewNote}
-          >
-            새 메모
-          </Button>
-        </div>
+      <Card>
+        <Button type="primary" icon={<PlusOutlined />} size="large" onClick={handleNewNote}>
+          새 메모
+        </Button>
+      </Card>
 
         {notes.length === 0 ? (
           <Card>
@@ -251,7 +239,6 @@ export default function NotesPage() {
             ))}
           </Row>
         )}
-      </div>
 
       <Modal
         title={editingId ? '메모 수정' : '새 메모 작성'}
@@ -308,6 +295,6 @@ export default function NotesPage() {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </Space>
   );
 }

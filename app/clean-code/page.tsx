@@ -34,18 +34,17 @@ const principles = [
 
 export default function CleanCodePage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <Card style={{ marginBottom: 24 }}>
-          <Space direction="vertical" size="small">
-            <Title level={2}>
-              <CodeOutlined /> 클린 코드 가이드
-            </Title>
-            <Paragraph>
-              읽기 쉽고 유지보수하기 좋은 코드를 작성하는 방법을 배워보세요.
-            </Paragraph>
-          </Space>
-        </Card>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="small">
+          <Title level={2}>
+            <CodeOutlined /> 클린 코드 가이드
+          </Title>
+          <Paragraph>
+            읽기 쉽고 유지보수하기 좋은 코드를 작성하는 방법을 배워보세요.
+          </Paragraph>
+        </Space>
+      </Card>
 
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           {principles.map((principle, idx) => (
@@ -68,7 +67,7 @@ export default function CleanCodePage() {
             </Card>
           ))}
         </Space>
-      </div>
-    </div>
+      </Space>
+    </Space>
   );
 }

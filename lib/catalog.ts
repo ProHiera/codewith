@@ -12,6 +12,15 @@ export type CatalogItem = {
 
 export const CATALOG: CatalogItem[] = [
   {
+    id: 'tech-stack',
+    title: '기술 스택 추천',
+    description: '프론트/백엔드/DB/배포 조합 가이드',
+    icon: '⚡',
+    path: '/tech-stack',
+    domain: 'devops',
+    langs: ['react', 'spring', 'node', 'docker'],
+  },
+  {
     id: 'js-cheats',
     title: 'JS 암기장',
     description: '레벨별 JS 개념 암기와 프리뷰',
@@ -164,7 +173,7 @@ export const DOMAINS: { key: Domain; label: string }[] = [
   { key: 'devops', label: 'DevOps' },
 ];
 
-export const LANGS: { key: string; label: string; category: 'frontend' | 'backend' | 'database' | 'tool' }[] = [
+export const LANGS: { key: string; label: string; category: 'frontend' | 'backend' | 'database' | 'tool' | 'devops' }[] = [
   { key: 'html', label: 'HTML', category: 'frontend' },
   { key: 'css', label: 'CSS', category: 'frontend' },
   { key: 'js', label: 'JavaScript', category: 'frontend' },
@@ -177,5 +186,7 @@ export const LANGS: { key: string; label: string; category: 'frontend' | 'backen
   { key: 'spring', label: 'Spring Boot', category: 'backend' },
   { key: 'sql', label: 'SQL', category: 'database' },
   { key: 'prisma', label: 'Prisma', category: 'database' },
-  { key: 'git', label: 'Git', category: 'tool' },
+  { key: 'git', label: 'Git', category: 'devops' },
+  { key: 'docker', label: 'Docker', category: 'devops' },
+  { key: 'k8s', label: 'Kubernetes', category: 'devops' },
 ];

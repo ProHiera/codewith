@@ -26,11 +26,10 @@ const steps = [
 
 export default function DeployGuidePage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
               <Title level={2}>
                 <RocketOutlined /> 배포 가이드
               </Title>
@@ -92,7 +91,6 @@ export default function DeployGuidePage() {
             />
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

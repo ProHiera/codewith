@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { 
@@ -57,21 +57,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
 
-  useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      router.push('/login');
-      return;
-    }
-    setUser(user);
-    fetchStats(user.id);
-  };
-
-  const fetchStats = async (userId: string) => {
+  const fetchStats = useCallback(async (userId: string) => {
     try {
       const { data: submissions } = await supabase
         .from('submissions')
@@ -113,7 +99,21 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const checkUser = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    setUser(user);
+    fetchStats(user.id);
+  }, [router, fetchStats]);
+
+  useEffect(() => {
+    checkUser();
+  }, [checkUser]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -122,32 +122,27 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%', padding: 24, textAlign: 'center' }}>
         <Spin size="large" tip="로딩 중..." />
-      </div>
+      </Space>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>
-              <UserOutlined /> 대시보드
-            </Title>
-            <Space>
-              <Text type="secondary">{user?.email}</Text>
-              <Button icon={<LogoutOutlined />} onClick={handleLogout}>
-                로그아웃
-              </Button>
-            </Space>
-          </div>
-        </div>
-      </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={2} style={{ margin: 0 }}>
+            <UserOutlined /> 대시보드
+          </Title>
+          <Space>
+            <Text type="secondary">{user?.email}</Text>
+            <Button icon={<LogoutOutlined />} onClick={handleLogout}>로그아웃</Button>
+          </Space>
+        </Space>
+      </Card>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>
               <Card>
@@ -259,6 +254,7 @@ export default function DashboardPage() {
               </Card>
             </Col>
           </Row>
+      </Card>
 
           <Card>
             <Space size="middle" wrap>
@@ -273,8 +269,6 @@ export default function DashboardPage() {
               </Button>
             </Space>
           </Card>
-        </Space>
-      </div>
-    </div>
+    </Space>
   );
 }

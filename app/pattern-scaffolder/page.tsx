@@ -34,18 +34,17 @@ const patterns = [
 
 export default function PatternScaffolderPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Card style={{ marginBottom: 24 }}>
-          <Space direction="vertical" size="small">
-            <Title level={2}>
-              <ApiOutlined /> 디자인 패턴 스캐폴더
-            </Title>
-            <Paragraph>
-              자주 사용되는 디자인 패턴 보일러플레이트를 생성합니다.
-            </Paragraph>
-          </Space>
-        </Card>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="small">
+          <Title level={2}>
+            <ApiOutlined /> 디자인 패턴 스캐폴더
+          </Title>
+          <Paragraph>
+            자주 사용되는 디자인 패턴 보일러플레이트를 생성합니다.
+          </Paragraph>
+        </Space>
+      </Card>
 
         <Row gutter={[16, 16]}>
           {patterns.map((pattern, idx) => (
@@ -72,7 +71,6 @@ export default function PatternScaffolderPage() {
             </Col>
           ))}
         </Row>
-      </div>
-    </div>
+      </Space>
   );
 }

@@ -59,9 +59,9 @@ export default function LearningHubPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
         <Spin size="large" tip="로딩 중..." />
-      </div>
+      </Space>
     );
   }
 
@@ -120,29 +120,26 @@ export default function LearningHubPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      {/* Header */}
-      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'sticky', top: 64, zIndex: 100 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
-              <BookOutlined /> 학습 허브
-            </Title>
-            <Space>
-              <Text type="secondary">{user?.email}</Text>
-              <Button 
-                type="primary" 
-                icon={<DashboardOutlined />}
-                onClick={() => router.push('/dashboard')}
-              >
-                대시보드
-              </Button>
-            </Space>
-          </div>
-        </div>
-      </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={2} style={{ margin: 0 }}>
+            <BookOutlined /> 학습 허브
+          </Title>
+          <Space>
+            <Text type="secondary">{user?.email}</Text>
+            <Button 
+              type="primary" 
+              icon={<DashboardOutlined />}
+              onClick={() => router.push('/dashboard')}
+            >
+              대시보드
+            </Button>
+          </Space>
+        </Space>
+      </Card>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
+      <Card>
         <Tabs 
           activeKey={activeTab} 
           onChange={setActiveTab}
@@ -216,7 +213,6 @@ export default function LearningHubPage() {
                     <Col xs={24} md={8} key={item.id}>
                       <Card 
                         hoverable
-                        style={{ borderLeft: `4px solid ${item.color}` }}
                       >
                         <Space direction="vertical" size="small" style={{ width: '100%' }}>
                           <div style={{ fontSize: 48, textAlign: 'center' }}>{item.icon}</div>
@@ -263,7 +259,7 @@ export default function LearningHubPage() {
                       >
                         <List.Item.Meta
                           avatar={
-                            <Avatar style={{ background: '#1890ff' }}>
+                            <Avatar>
                               {post.author.nickname[0]}
                             </Avatar>
                           }
@@ -293,7 +289,7 @@ export default function LearningHubPage() {
             },
           ]}
         />
-      </div>
-    </div>
+      </Card>
+    </Space>
   );
 }

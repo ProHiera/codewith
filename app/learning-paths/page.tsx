@@ -242,18 +242,18 @@ export default function LearningPathsPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          <div>
-            <Title level={1}>
-              <BookOutlined /> 러닝 경로 프리셋
-            </Title>
-            <Paragraph style={{ fontSize: 16 }}>
-              목표별 추천 학습 순서와 로드맵을 제공합니다
-            </Paragraph>
-          </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Title level={1}>
+          <BookOutlined /> 러닝 경로 프리셋
+        </Title>
+        <Paragraph style={{ fontSize: 16 }}>
+          목표별 추천 학습 순서와 로드맵을 제공합니다
+        </Paragraph>
+      </Card>
 
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {(recommended === '1' || recommended === 'true') && (
             <Alert
               message="레벨 평가 결과에 맞춘 추천 경로"
@@ -494,7 +494,7 @@ export default function LearningPathsPage() {
             </Col>
           </Row>
         </Space>
-      </div>
-    </div>
+      </Card>
+    </Space>
   );
 }

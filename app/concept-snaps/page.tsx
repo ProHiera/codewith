@@ -187,19 +187,19 @@ export default function ConceptSnapsPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #e6f7ff 0%, #fff 100%)', padding: '24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          <div>
-            <Title level={1}>
-              <BookOutlined /> JS 개념 스냅샷
-            </Title>
-            <Paragraph style={{ fontSize: 16 }}>
-              어려운 JavaScript 개념을 카드 형식으로 쉽게 이해하세요
-            </Paragraph>
-          </div>
+    <div style={{ padding: '24px', maxWidth: 1200, margin: '0 auto' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Card>
+          <Title level={1}>
+            <BookOutlined /> JS 개념 스냅샷
+          </Title>
+          <Paragraph style={{ fontSize: 16 }}>
+            어려운 JavaScript 개념을 카드 형식으로 쉽게 이해하세요
+          </Paragraph>
+        </Card>
 
-          {!selectedConcept ? (
+        {!selectedConcept ? (
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
             <>
               <Space wrap>
                 {categories.map((cat) => (
@@ -237,125 +237,123 @@ export default function ConceptSnapsPage() {
                   </Col>
                 ))}
               </Row>
-            </>
-          ) : (
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
-              <Card>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <Title level={4} style={{ margin: 0 }}>{selectedConcept.title}</Title>
-                  <Button
-                    icon={<CloseOutlined />}
-                    onClick={() => setSelectedConcept(null)}
-                  >
-                    닫기
-                  </Button>
-                </div>
-                <Progress
-                  percent={Math.round(((currentCard + 1) / selectedConcept.cards.length) * 100)}
-                  showInfo={false}
-                />
-                <Text type="secondary" style={{ marginTop: 8, display: 'block' }}>
-                  {currentCard + 1} / {selectedConcept.cards.length} 단계
-                </Text>
-              </Card>
 
-              <Card>
-                <div style={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  padding: '24px',
-                  borderRadius: '8px 8px 0 0',
-                  margin: '-24px -24px 24px -24px',
-                  color: 'white'
-                }}>
-                  <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 12, display: 'block', marginBottom: 8 }}>
-                    Step {selectedConcept.cards[currentCard].step}
-                  </Text>
-                  <Title level={3} style={{ color: 'white', margin: 0 }}>
-                    {selectedConcept.cards[currentCard].title}
-                  </Title>
-                  {selectedConcept.cards[currentCard].visual && (
-                    <div style={{ fontSize: 40, marginTop: 12 }}>
-                      {selectedConcept.cards[currentCard].visual}
-                    </div>
-                  )}
-                </div>
-
-                <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                  <div style={{
-                    background: '#1e1e1e',
-                    padding: '20px',
-                    borderRadius: 8,
-                    color: 'white'
-                  }}>
-                    <pre style={{ margin: 0, overflow: 'auto', fontSize: 14, lineHeight: 1.6 }}>
-                      <code>{selectedConcept.cards[currentCard].code}</code>
-                    </pre>
+              <Card style={{ background: 'linear-gradient(135deg, #f6f0ff 0%, #e6ccff 100%)', border: 'none' }}>
+                <Title level={4}><BulbOutlined /> 효과적인 학습 방법</Title>
+                <Space direction="vertical">
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Text strong style={{ color: '#722ed1' }}>1.</Text>
+                    <Text>각 카드를 천천히 읽고 코드를 직접 실행해보세요</Text>
                   </div>
-
-                  <Card style={{ background: '#e6f7ff', border: 'none', borderLeft: '4px solid #1890ff' }}>
-                    <Text style={{ fontSize: 16, lineHeight: 1.6 }}>
-                      {selectedConcept.cards[currentCard].explanation}
-                    </Text>
-                  </Card>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 16 }}>
-                    <Button
-                      icon={<LeftOutlined />}
-                      onClick={prevCard}
-                      disabled={currentCard === 0}
-                      size="large"
-                    >
-                      이전
-                    </Button>
-                    
-                    {currentCard < selectedConcept.cards.length - 1 ? (
-                      <Button
-                        type="primary"
-                        icon={<RightOutlined />}
-                        iconPosition="end"
-                        onClick={nextCard}
-                        size="large"
-                      >
-                        다음
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        icon={<CheckCircleOutlined />}
-                        onClick={() => setSelectedConcept(null)}
-                        size="large"
-                        style={{ background: '#52c41a', borderColor: '#52c41a' }}
-                      >
-                        완료!
-                      </Button>
-                    )}
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Text strong style={{ color: '#722ed1' }}>2.</Text>
+                    <Text>이해가 안 되면 이전 카드로 돌아가서 다시 보세요</Text>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Text strong style={{ color: '#722ed1' }}>3.</Text>
+                    <Text>배운 내용을 자신의 프로젝트에 바로 적용해보세요</Text>
                   </div>
                 </Space>
               </Card>
-            </Space>
-          )}
+            </>
+          </Space>
+        ) : (
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Card>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <Title level={4} style={{ margin: 0 }}>{selectedConcept.title}</Title>
+                <Button
+                  icon={<CloseOutlined />}
+                  onClick={() => setSelectedConcept(null)}
+                >
+                  닫기
+                </Button>
+              </div>
+              <Progress
+                percent={Math.round(((currentCard + 1) / selectedConcept.cards.length) * 100)}
+                showInfo={false}
+              />
+              <Text type="secondary" style={{ marginTop: 8, display: 'block' }}>
+                {currentCard + 1} / {selectedConcept.cards.length} 단계
+              </Text>
+            </Card>
 
-          {!selectedConcept && (
-            <Card style={{ background: 'linear-gradient(135deg, #f6f0ff 0%, #e6ccff 100%)', border: 'none' }}>
-              <Title level={4}><BulbOutlined /> 효과적인 학습 방법</Title>
-              <Space direction="vertical">
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <Text strong style={{ color: '#722ed1' }}>1.</Text>
-                  <Text>각 카드를 천천히 읽고 코드를 직접 실행해보세요</Text>
+            <Card>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                padding: '24px',
+                borderRadius: '8px 8px 0 0',
+                margin: '-24px -24px 24px -24px',
+                color: 'white'
+              }}>
+                <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 12, display: 'block', marginBottom: 8 }}>
+                  Step {selectedConcept.cards[currentCard].step}
+                </Text>
+                <Title level={3} style={{ color: 'white', margin: 0 }}>
+                  {selectedConcept.cards[currentCard].title}
+                </Title>
+                {selectedConcept.cards[currentCard].visual && (
+                  <div style={{ fontSize: 40, marginTop: 12 }}>
+                    {selectedConcept.cards[currentCard].visual}
+                  </div>
+                )}
+              </div>
+
+              <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                <div style={{
+                  background: '#1e1e1e',
+                  padding: '20px',
+                  borderRadius: 8,
+                  color: 'white'
+                }}>
+                  <pre style={{ margin: 0, overflow: 'auto', fontSize: 14, lineHeight: 1.6 }}>
+                    <code>{selectedConcept.cards[currentCard].code}</code>
+                  </pre>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <Text strong style={{ color: '#722ed1' }}>2.</Text>
-                  <Text>이해가 안 되면 이전 카드로 돌아가서 다시 보세요</Text>
-                </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <Text strong style={{ color: '#722ed1' }}>3.</Text>
-                  <Text>배운 내용을 자신의 프로젝트에 바로 적용해보세요</Text>
+
+                <Card style={{ background: '#e6f7ff', border: 'none', borderLeft: '4px solid #1890ff' }}>
+                  <Text style={{ fontSize: 16, lineHeight: 1.6 }}>
+                    {selectedConcept.cards[currentCard].explanation}
+                  </Text>
+                </Card>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 16 }}>
+                  <Button
+                    icon={<LeftOutlined />}
+                    onClick={prevCard}
+                    disabled={currentCard === 0}
+                    size="large"
+                  >
+                    이전
+                  </Button>
+                  
+                  {currentCard < selectedConcept.cards.length - 1 ? (
+                    <Button
+                      type="primary"
+                      icon={<RightOutlined />}
+                      iconPosition="end"
+                      onClick={nextCard}
+                      size="large"
+                    >
+                      다음
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      icon={<CheckCircleOutlined />}
+                      onClick={() => setSelectedConcept(null)}
+                      size="large"
+                      style={{ background: '#52c41a', borderColor: '#52c41a' }}
+                    >
+                      완료!
+                    </Button>
+                  )}
                 </div>
               </Space>
             </Card>
-          )}
-        </Space>
-      </div>
+          </Space>
+        )}
+      </Space>
     </div>
   );
 }

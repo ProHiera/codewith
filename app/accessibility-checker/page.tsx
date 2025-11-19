@@ -14,61 +14,57 @@ const checks = [
 
 export default function AccessibilityCheckerPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div style={{ padding: '24px', maxWidth: 1200, margin: '0 auto' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <CheckCircleOutlined /> 접근성 체크리스트
-              </Title>
-              <Paragraph>
-                웹 접근성 표준(WCAG)을 준수하기 위한 체크리스트입니다.
-              </Paragraph>
-            </div>
-
-            <Alert
-              message="웹 접근성이란?"
-              description="장애인, 고령자 등 모든 사용자가 웹사이트를 이용할 수 있도록 보장하는 것입니다."
-              type="info"
-              showIcon
-              icon={<WarningOutlined />}
-            />
-
-            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-              {checks.map((check, idx) => (
-                <Card key={idx} title={<Tag color="purple">{check.category}</Tag>} size="small">
-                  <Checkbox.Group style={{ width: '100%' }}>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      {check.items.map((item, i) => (
-                        <Checkbox key={i} value={item}>
-                          {item}
-                        </Checkbox>
-                      ))}
-                    </Space>
-                  </Checkbox.Group>
-                </Card>
-              ))}
-            </Space>
-
-            <Alert
-              message="추천 도구"
-              description={
-                <>
-                  <a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank" rel="noopener noreferrer">
-                    WCAG 2.1 Quick Reference
-                  </a>
-                  {' · '}
-                  <a href="https://wave.webaim.org/" target="_blank" rel="noopener noreferrer">
-                    WAVE Accessibility Tool
-                  </a>
-                </>
-              }
-              type="success"
-            />
-          </Space>
+          <Title level={2}>
+            <CheckCircleOutlined /> 접근성 체크리스트
+          </Title>
+          <Paragraph>
+            웹 접근성 표준(WCAG)을 준수하기 위한 체크리스트입니다.
+          </Paragraph>
         </Card>
-      </div>
+
+        <Alert
+          message="웹 접근성이란?"
+          description="장애인, 고령자 등 모든 사용자가 웹사이트를 이용할 수 있도록 보장하는 것입니다."
+          type="info"
+          showIcon
+          icon={<WarningOutlined />}
+        />
+
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          {checks.map((check, idx) => (
+            <Card key={idx} title={<Tag color="purple">{check.category}</Tag>} size="small">
+              <Checkbox.Group style={{ width: '100%' }}>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  {check.items.map((item, i) => (
+                    <Checkbox key={i} value={item}>
+                      {item}
+                    </Checkbox>
+                  ))}
+                </Space>
+              </Checkbox.Group>
+            </Card>
+          ))}
+        </Space>
+
+        <Alert
+          message="추천 도구"
+          description={
+            <>
+              <a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank" rel="noopener noreferrer">
+                WCAG 2.1 Quick Reference
+              </a>
+              {' · '}
+              <a href="https://wave.webaim.org/" target="_blank" rel="noopener noreferrer">
+                WAVE Accessibility Tool
+              </a>
+            </>
+          }
+          type="success"
+        />
+      </Space>
     </div>
   );
 }

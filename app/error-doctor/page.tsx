@@ -29,16 +29,15 @@ export default function ErrorDoctorPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <BugOutlined /> 에러 진단 도우미
-              </Title>
-              <Paragraph>에러 메시지와 코드를 입력하면 AI가 원인과 해결방법을 알려드립니다.</Paragraph>
-            </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <BugOutlined /> 에러 진단 도우미
+            </Title>
+            <Paragraph>에러 메시지와 코드를 입력하면 AI가 원인과 해결방법을 알려드립니다.</Paragraph>
+          </div>
 
             <Form layout="vertical" onFinish={handleDiagnose}>
               <Form.Item
@@ -98,7 +97,6 @@ export default function ErrorDoctorPage() {
             )}
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

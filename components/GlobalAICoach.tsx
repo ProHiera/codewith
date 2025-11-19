@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { FloatButton, Card, Input, Button, Space, Spin, Badge, Typography } from 'antd';
+import { RobotOutlined, CloseOutlined, SendOutlined } from '@ant-design/icons';
+
+const { Title, Text } = Typography;
 
 export default function GlobalAICoach() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +37,7 @@ export default function GlobalAICoach() {
     } catch {
       setMessages(prev => [...prev, { 
         role: 'ai', 
-        content: '죄송해요, 일시적인 오류가 발생했어요. 다시 시도해주세요! 🙏' 
+        content: '죄송해요, 일시적인 오류가 발생했어요 다시 시도해주세요 ♥' 
       }]);
     } finally {
       setIsLoading(false);
@@ -51,123 +55,175 @@ export default function GlobalAICoach() {
     <>
       {/* Floating Toggle Button */}
       {!isOpen && (
-        <button
+        <FloatButton
+          icon={<Badge dot color="green"><RobotOutlined style={{ fontSize: 24 }} /></Badge>}
+          type="primary"
+          style={{ 
+            width: 64, 
+            height: 64,
+            right: 32,
+            bottom: 32,
+          }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-8 right-8 z-50 w-16 h-16 bg-gray-900 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all hover:scale-110 flex items-center justify-center group"
-          aria-label="AI 코치 열기"
-        >
-          <div className="relative">
-            <span className="text-3xl">🤖</span>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          </div>
-          <div className="absolute -top-12 right-0 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            AI 코치에게 물어보기
-          </div>
-        </button>
+          tooltip="AI 코치에게 물어보기"
+        />
       )}
 
       {/* Chat Panel */}
       {isOpen && (
-        <div className="fixed bottom-8 right-8 z-50 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-300 overflow-hidden">
-          {/* Header */}
-          <div className="bg-gray-900 text-white p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <span className="text-3xl">🤖</span>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">AI 개발 코치</h3>
-                <p className="text-xs text-gray-300">항상 함께하는 코딩 파트너</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:bg-white/20 rounded-lg p-2 transition-all"
-              aria-label="닫기"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    msg.role === 'user'
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-white border border-gray-300 text-gray-800'
-                  }`}
-                >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+        <div style={{ 
+          position: 'fixed', 
+          bottom: 32, 
+          right: 32, 
+          zIndex: 1000, 
+          width: 400, 
+          height: 600,
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <Card 
+            style={{ 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 12px 48px rgba(0,0,0,0.15)',
+              borderRadius: 16,
+              overflow: 'hidden'
+            }}
+            bodyStyle={{ 
+              padding: 0, 
+              flex: 1, 
+              display: 'flex', 
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Header */}
+            <div style={{ 
+              background: '#1f2937', 
+              color: 'white', 
+              padding: 16,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <Space>
+                <Badge dot color="green">
+                  <RobotOutlined style={{ fontSize: 32 }} />
+                </Badge>
+                <div>
+                  <Title level={4} style={{ margin: 0, color: 'white', fontSize: 18 }}>AI 개발 코치</Title>
+                  <Text style={{ color: '#9ca3af', fontSize: 12 }}>항상 함께하는 코딩 파트너</Text>
                 </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-300 rounded-2xl px-4 py-3">
-                  <div className="flex gap-2">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-900 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-900 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </Space>
+              <Button 
+                type="text" 
+                icon={<CloseOutlined />}
+                onClick={() => setIsOpen(false)}
+                style={{ color: 'white' }}
+              />
+            </div>
+
+            {/* Messages */}
+            <div style={{ 
+              flex: 1, 
+              overflowY: 'auto', 
+              padding: 16, 
+              background: '#f9fafb',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16
+            }}>
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  style={{ 
+                    display: 'flex', 
+                    justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start'
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: '80%',
+                      borderRadius: 16,
+                      padding: '12px 16px',
+                      background: msg.role === 'user' ? '#1f2937' : 'white',
+                      color: msg.role === 'user' ? 'white' : '#1f2937',
+                      border: msg.role === 'user' ? 'none' : '1px solid #e5e7eb',
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      whiteSpace: 'pre-wrap'
+                    }}
+                  >
+                    {msg.content}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Quick Actions */}
-          <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {[
-                '코드 설명해줘',
-                '에러 해결법',
-                '최적화 방법',
-                '학습 팁'
-              ].map((quick) => (
-                <button
-                  key={quick}
-                  onClick={() => {
-                    setInput(quick);
-                    setTimeout(() => handleSend(), 100);
-                  }}
-                  className="px-3 py-1 bg-white border border-gray-300 text-gray-900 rounded-full text-xs hover:bg-gray-100 transition-all whitespace-nowrap"
-                  disabled={isLoading}
-                >
-                  {quick}
-                </button>
               ))}
+              {isLoading && (
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <div style={{ 
+                    background: 'white', 
+                    border: '1px solid #e5e7eb', 
+                    borderRadius: 16, 
+                    padding: '12px 16px'
+                  }}>
+                    <Spin size="small" />
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
 
-          {/* Input */}
-          <div className="p-4 bg-white border-t border-gray-200">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="무엇이든 물어보세요..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm text-gray-900 placeholder-gray-500"
-                disabled={isLoading}
-              />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || isLoading}
-                className="px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-              >
-                전송
-              </button>
+            {/* Quick Actions */}
+            <div style={{ 
+              padding: '8px 16px', 
+              background: '#f9fafb', 
+              borderTop: '1px solid #e5e7eb'
+            }}>
+              <Space wrap size="small">
+                {[
+                  '코드 설명해줘',
+                  '에러 해결법',
+                  '최적화 방법',
+                  '학습 팁'
+                ].map((quick) => (
+                  <Button
+                    key={quick}
+                    size="small"
+                    onClick={() => {
+                      setInput(quick);
+                      setTimeout(() => handleSend(), 100);
+                    }}
+                    disabled={isLoading}
+                  >
+                    {quick}
+                  </Button>
+                ))}
+              </Space>
             </div>
-          </div>
+
+            {/* Input */}
+            <div style={{ padding: 16, background: 'white', borderTop: '1px solid #e5e7eb' }}>
+              <Space.Compact style={{ width: '100%' }}>
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onPressEnter={handleKeyPress}
+                  placeholder="무엇이든 물어보세요..."
+                  disabled={isLoading}
+                  style={{ borderRadius: '12px 0 0 12px' }}
+                />
+                <Button
+                  type="primary"
+                  icon={<SendOutlined />}
+                  onClick={handleSend}
+                  disabled={!input.trim() || isLoading}
+                  style={{ borderRadius: '0 12px 12px 0' }}
+                >
+                  전송
+                </Button>
+              </Space.Compact>
+            </div>
+          </Card>
         </div>
       )}
     </>

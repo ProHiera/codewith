@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { 
   Button, 
@@ -10,7 +11,8 @@ import {
   Row, 
   Col, 
   Typography, 
-  Space
+  Space,
+  Divider
 } from 'antd';
 import {
   RocketOutlined,
@@ -25,7 +27,11 @@ import {
   FireOutlined,
   BookOutlined,
   ExperimentOutlined,
-  ToolOutlined
+  ToolOutlined,
+  CloudOutlined,
+  DesktopOutlined,
+  GlobalOutlined,
+  FolderOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -67,270 +73,457 @@ export default function HomePage() {
 
   const features = [
     {
-      icon: <CodeOutlined style={{ fontSize: 48, color: '#6366F1' }} />,
+      icon: <CodeOutlined style={{ fontSize: 48 }} />,
       title: 'AI가 다 알아서 관리',
       items: ['복습 스케줄 자동 생성', '약점 분석 후 맞춤 문제', '24/7 AI 코치 질문 답변']
     },
     {
-      icon: <ThunderboltOutlined style={{ fontSize: 48, color: '#F59E0B' }} />,
-      title: '색깔로 딱 구분',
-      items: ['노란색 = 암기 필수', '파란색 = 이해만', '보라색 = 실습']
+      icon: <ThunderboltOutlined style={{ fontSize: 48 }} />,
+      title: '색상으로 한눈에 구분해요',
+      items: [
+        { text: '빨간색 = 암기 필수', color: '#FF0000' },
+        { text: '파란색 = 이해만', color: '#1890ff' },
+        { text: '보라색 = 실습', color: '#722ed1' }
+      ]
     },
     {
-      icon: <TrophyOutlined style={{ fontSize: 48, color: '#10B981' }} />,
+      icon: <TrophyOutlined style={{ fontSize: 48 }} />,
       title: '게임처럼 재밌게',
       items: ['레벨업 시스템', '업적 뱃지 수집', '연속 출석 스트릭']
     },
   ];
 
   const mainFeatures = [
-    { icon: <RocketOutlined />, title: '레벨 평가', desc: '맞춤 학습 경로 제공', href: '/level-assessment', color: '#52c41a' },
-    { icon: <CodeOutlined />, title: 'AI 코치', desc: '24/7 코드 리뷰', href: '/ai-coach', color: '#722ed1' },
-    { icon: <ThunderboltOutlined />, title: 'CSS 스피드런', desc: '하루 10분 과제', href: '/missions', color: '#faad14' },
-    { icon: <TrophyOutlined />, title: '게임화', desc: '레벨업 & 뱃지', href: '/dashboard', color: '#1890ff' },
+    { icon: <RocketOutlined />, title: '레벨 평가', desc: '맞춤 학습 경로 제공', href: '/level-assessment' },
+    { icon: <ThunderboltOutlined />, title: '기술 스택 추천', desc: '프로젝트별 최적 조합', href: '/tech-stack' },
+    { icon: <CodeOutlined />, title: 'AI 코치', desc: '24/7 코드 리뷰', href: '/ai-coach' },
+    { icon: <TrophyOutlined />, title: 'CSS 스피드런', desc: '하루 10분 과제', href: '/missions' },
   ];
 
-  const learningTools = [
-    { icon: <GitlabOutlined />, title: 'Git 시뮬레이터', desc: '브라우저에서 Git 실습', href: '/git-simulator' },
-    { icon: <BugOutlined />, title: '에러 닥터', desc: '에러 분석 및 해결', href: '/error-doctor' },
-    { icon: <CodeOutlined />, title: '클론 코딩 코치', desc: '비교 및 피드백', href: '/clone-coach' },
-    { icon: <ThunderboltOutlined />, title: '비동기 시뮬레이터', desc: 'async/await 시각화', href: '/async-simulator' },
-    { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'API 테스트 및 디버깅', href: '/api-sandbox' },
-    { icon: <DatabaseOutlined />, title: 'DB 스키마 메이커', desc: '데이터베이스 설계', href: '/db-schema' },
-    { icon: <BookOutlined />, title: 'JS 개념 스냅샷', desc: '핵심 개념 카드', href: '/concept-snaps' },
-    { icon: <ExperimentOutlined />, title: 'JS 치트시트', desc: '빠른 문법 참고', href: '/js-cheats' },
+  // Frontend tools by language
+  const frontendTools = {
+    all: [
+      { icon: <FireOutlined />, title: 'CSS 스피드런', desc: '자동 채점 CSS 실습', href: '/missions', color: '#f5222d', langs: ['html', 'css'] },
+      { icon: <CheckCircleOutlined />, title: '접근성 검사기', desc: 'ARIA 점검 및 제안', href: '/accessibility-checker', color: '#52c41a', langs: ['html'] },
+      { icon: <CodeOutlined />, title: 'JS 암기장', desc: '레벨별 JS 개념 암기', href: '/js-cheats', color: '#52c41a', langs: ['js'] },
+      { icon: <BookOutlined />, title: 'JS 개념 스냅샷', desc: '표현식/문, this, async', href: '/concept-snaps', color: '#1890ff', langs: ['js'] },
+      { icon: <ThunderboltOutlined />, title: '비동기 시뮬레이터', desc: 'await ~ finally 시각화', href: '/async-simulator', color: '#faad14', langs: ['js'] },
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2', langs: ['js', 'ts'] },
+      { icon: <CodeOutlined />, title: '클론 코딩 코치', desc: 'VS Code 에디터 비교', href: '/clone-coach', color: '#722ed1', langs: ['react', 'vue'] },
+    ],
+    html: [
+      { icon: <FireOutlined />, title: 'CSS 스피드런', desc: '자동 채점 CSS 실습', href: '/missions', color: '#f5222d' },
+      { icon: <CheckCircleOutlined />, title: '접근성 검사기', desc: 'ARIA 점검 및 제안', href: '/accessibility-checker', color: '#52c41a' },
+    ],
+    css: [
+      { icon: <FireOutlined />, title: 'CSS 스피드런', desc: '자동 채점 CSS 실습', href: '/missions', color: '#f5222d' },
+    ],
+    js: [
+      { icon: <CodeOutlined />, title: 'JS 암기장', desc: '레벨별 JS 개념 암기', href: '/js-cheats', color: '#52c41a' },
+      { icon: <BookOutlined />, title: 'JS 개념 스냅샷', desc: '표현식/문, this, async', href: '/concept-snaps', color: '#1890ff' },
+      { icon: <ThunderboltOutlined />, title: '비동기 시뮬레이터', desc: 'await ~ finally 시각화', href: '/async-simulator', color: '#faad14' },
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2' },
+    ],
+    ts: [
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2' },
+    ],
+    react: [
+      { icon: <CodeOutlined />, title: '클론 코딩 코치', desc: 'VS Code 에디터 비교', href: '/clone-coach', color: '#722ed1' },
+    ],
+    vue: [
+      { icon: <CodeOutlined />, title: '클론 코딩 코치', desc: 'VS Code 에디터 비교', href: '/clone-coach', color: '#722ed1' },
+    ],
+  };
+
+  // Backend tools by language
+  const backendTools = {
+    all: [
+      { icon: <DatabaseOutlined />, title: 'DB 스키마 메이커', desc: '요구사항 → DDL 생성', href: '/db-schema', color: '#eb2f96', langs: ['sql'] },
+      { icon: <ToolOutlined />, title: '실무 패턴 주입', desc: 'Controller→Service→Repository', href: '/pattern-scaffolder', color: '#13c2c2', langs: ['java', 'spring', 'node'] },
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2', langs: ['node', 'python', 'java'] },
+    ],
+    node: [
+      { icon: <ToolOutlined />, title: '실무 패턴 주입', desc: 'Controller→Service→Repository', href: '/pattern-scaffolder', color: '#13c2c2' },
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2' },
+    ],
+    python: [
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2' },
+    ],
+    java: [
+      { icon: <ToolOutlined />, title: '실무 패턴 주입', desc: 'Controller→Service→Repository', href: '/pattern-scaffolder', color: '#13c2c2' },
+      { icon: <ApiOutlined />, title: 'API 샌드박스', desc: 'fetch/axios 실습', href: '/api-sandbox', color: '#13c2c2' },
+    ],
+    spring: [
+      { icon: <ToolOutlined />, title: '실무 패턴 주입', desc: 'Controller→Service→Repository', href: '/pattern-scaffolder', color: '#13c2c2' },
+    ],
+    sql: [
+      { icon: <DatabaseOutlined />, title: 'DB 스키마 메이커', desc: '요구사항 → DDL 생성', href: '/db-schema', color: '#eb2f96' },
+    ],
+  };
+
+  // DevOps & General tools
+  const devopsTools = [
+    { icon: <RocketOutlined />, title: '배포 가이드', desc: 'Vercel/AWS 배포 실습', href: '/deploy-guide', color: '#52c41a' },
+    { icon: <GitlabOutlined />, title: 'Git 시뮬레이터', desc: '브라우저에서 Git 실습', href: '/git-simulator', color: '#1890ff' },
+    { icon: <BugOutlined />, title: '에러 닥터', desc: '에러 분석 및 해결', href: '/error-doctor', color: '#f5222d' },
+    { icon: <BugOutlined />, title: '커밋/PR 비서', desc: 'Conventional Commits', href: '/commit-assistant', color: '#52c41a' },
   ];
+
+  // Learning & Career tools
+  const careerTools = [
+    { icon: <ThunderboltOutlined />, title: '기술 스택 추천', desc: '프론트/백엔드/DB 조합', href: '/tech-stack', color: '#722ed1' },
+    { icon: <TrophyOutlined />, title: '포트폴리오 빌더', desc: '프로젝트 카드 구성', href: '/portfolio', color: '#722ed1' },
+    { icon: <CodeOutlined />, title: '면접 리허설', desc: '질문/모범답안/실습', href: '/interview-practice', color: '#1890ff' },
+    { icon: <BookOutlined />, title: '러닝 경로', desc: '목표별 N주 로드맵', href: '/learning-paths', color: '#1890ff' },
+    { icon: <ExperimentOutlined />, title: '학습 레이더', desc: '취약 개념 분석', href: '/learning-radar', color: '#faad14' },
+    { icon: <FolderOutlined />, title: '프로젝트 구조 배우기', desc: 'VS Code 파일 트리 시뮬레이션', href: '/project-structure', color: '#52c41a' },
+  ];
+
+  const [selectedFrontendLang, setSelectedFrontendLang] = useState<string>('all');
+  const [selectedBackendLang, setSelectedBackendLang] = useState<string>('all');
 
   return (
-    <div style={{ background: '#f5f5f5' }}>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
       {/* Hero Section */}
-      <div style={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '80px 24px',
-        textAlign: 'center'
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <Tag 
-            icon={<FireOutlined />} 
-            color="gold" 
-            style={{ marginBottom: 24, fontSize: 14, padding: '8px 16px' }}
-          >
-            100% 무료 · 회원가입 30초
-          </Tag>
+      <Card>
+        <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center' }}>
+          <Tag icon={<FireOutlined />} color="gold">100% 무료 · 회원가입 30초</Tag>
 
           {!loading && user ? (
-            <Title style={{ color: 'white', marginBottom: 16, fontSize: 48 }}>
-              안녕하세요, <span style={{ color: '#fbbf24' }}>{nickname}</span>님!<br />
-              <span style={{ fontSize: 36 }}>오늘도 재밌게 학습해볼까요?</span>
-            </Title>
+            <>
+              <Title>안녕하세요, <Text type="warning">{nickname}</Text>님!</Title>
+              <Title level={2}>오늘도 재밌게 학습해볼까요?</Title>
+            </>
           ) : (
-            <Title style={{ color: 'white', marginBottom: 16, fontSize: 48 }}>
-              집에서 혼자 공부하는<br />
-              <span style={{ color: '#fbbf24' }}>당신을 위한 AI 학습 파트너</span>
-            </Title>
+            <>
+              <Title>집에서 혼자 공부하는</Title>
+              <Title><Text type="warning">당신을 위한 AI 학습 파트너</Text></Title>
+            </>
           )}
 
-          <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, marginBottom: 32 }}>
+          <Paragraph>
             초보 개발자 · 취준생 · N잡 준비생 · 비전공자를 위한<br />
-            <Text strong style={{ color: 'white' }}>AI 코치가 함께하는 즐거운 코딩 학습</Text>
+            <Text strong>AI 코치가 함께하는 즐거운 코딩 학습</Text>
           </Paragraph>
 
-          <Space size="large">
+          <Space>
             {!loading && user ? (
               <>
-                <Button 
-                  type="primary" 
-                  size="large" 
-                  icon={<RocketOutlined />}
-                  href="/dashboard"
-                  style={{ height: 48, fontSize: 16, paddingLeft: 32, paddingRight: 32 }}
-                >
-                  대시보드로 이동
-                </Button>
-                <Button 
-                  size="large"
-                  style={{ height: 48, fontSize: 16, paddingLeft: 32, paddingRight: 32, background: 'white' }}
-                  href="/missions"
-                >
-                  오늘의 미션
-                </Button>
+                <Button type="primary" size="large" icon={<RocketOutlined />} href="/dashboard">대시보드로 이동</Button>
+                <Button size="large" href="/missions">오늘의 미션</Button>
               </>
             ) : (
               <>
-                <Button 
-                  type="primary" 
-                  size="large" 
-                  icon={<RocketOutlined />}
-                  href="/signup"
-                  style={{ height: 48, fontSize: 16, paddingLeft: 32, paddingRight: 32 }}
-                >
-                  무료로 시작하기
-                </Button>
-                <Button 
-                  size="large"
-                  style={{ height: 48, fontSize: 16, paddingLeft: 32, paddingRight: 32, background: 'white' }}
-                  href="/login"
-                >
-                  로그인
-                </Button>
+                <Button type="primary" size="large" icon={<RocketOutlined />} href="/signup">무료로 시작하기</Button>
+                <Button size="large" href="/login">로그인</Button>
               </>
             )}
           </Space>
 
-          <div style={{ marginTop: 32 }}>
-            <Space size="large">
-              <Tag icon={<CheckCircleOutlined />} color="success">100% 무료</Tag>
-              <Tag icon={<CheckCircleOutlined />} color="success">회원가입 30초</Tag>
-              <Tag icon={<CheckCircleOutlined />} color="success">ADHD 친화적</Tag>
-            </Space>
-          </div>
-        </div>
-      </div>
+          <Space>
+            <Tag icon={<CheckCircleOutlined />} color="success">100% 무료</Tag>
+            <Tag icon={<CheckCircleOutlined />} color="success">회원가입 30초</Tag>
+            <Tag icon={<CheckCircleOutlined />} color="success">ADHD 친화적</Tag>
+          </Space>
+        </Space>
+      </Card>
 
       {/* Core Values */}
-      <div style={{ padding: '80px 24px', background: 'white' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <Title level={2} style={{ textAlign: 'center', marginBottom: 16 }}>
-            💎 우리가 제공하는 핵심 가치
-          </Title>
-          <Paragraph style={{ textAlign: 'center', fontSize: 16, color: '#666', marginBottom: 48 }}>
-            다른 학습 플랫폼과 뭐가 다른가요?
-          </Paragraph>
+      <Card>
+        <Title level={2} style={{ textAlign: 'center' }}>우리가 제공하는 핵심 가치</Title>
+        <Paragraph type="secondary" style={{ textAlign: 'center' }}>다른 학습 플랫폼과 뭐가 다른가요?</Paragraph>
+        <Divider />
 
-          <Row gutter={[24, 24]}>
-            {features.map((feature, idx) => (
-              <Col xs={24} md={8} key={idx}>
-                <Card 
-                  hoverable
-                  style={{ height: '100%', textAlign: 'center' }}
-                >
-                  <div style={{ marginBottom: 24 }}>{feature.icon}</div>
+        <Row gutter={[24, 24]}>
+          {features.map((feature, idx) => (
+            <Col xs={24} md={8} key={idx}>
+              <Card hoverable>
+                <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center' }}>
+                  {feature.icon}
                   <Title level={4}>{feature.title}</Title>
-                  <ul style={{ textAlign: 'left', paddingLeft: 20 }}>
+                  <Space direction="vertical" size="small" style={{ width: '100%' }}>
                     {feature.items.map((item, i) => (
-                      <li key={i} style={{ marginBottom: 8, color: '#666' }}>
-                        <CheckCircleOutlined style={{ color: '#6366F1', marginRight: 8 }} />
-                        {item}
-                      </li>
+                      <div key={i}>
+                        <CheckCircleOutlined /> 
+                        {typeof item === 'string' ? (item) : (
+                          <Text strong style={{ color: item.color }}>{item.text}</Text>
+                        )}
+                      </div>
                     ))}
-                  </ul>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
-      </div>
+                  </Space>
+                </Space>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Card>
 
       {/* Main Features */}
-      <div style={{ padding: '80px 24px', background: '#f5f5f5' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <Title level={2} style={{ textAlign: 'center', marginBottom: 48 }}>
-            <RocketOutlined /> 주요 기능
-          </Title>
+      <Card>
+        <Title level={2} style={{ textAlign: 'center' }}><RocketOutlined /> 주요 기능</Title>
+        <Divider />
 
-          <Row gutter={[24, 24]}>
-            {mainFeatures.map((feature, idx) => (
-              <Col xs={24} sm={12} lg={6} key={idx}>
-                <Link href={feature.href}>
+        <Row gutter={[24, 24]}>
+          {mainFeatures.map((feature, idx) => (
+            <Col xs={24} sm={12} lg={6} key={idx}>
+              <Link href={feature.href}>
+                <Card hoverable>
+                  <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center' }}>
+                    <div style={{ fontSize: 48 }}>{feature.icon}</div>
+                    <Title level={4}>{feature.title}</Title>
+                    <Paragraph type="secondary">{feature.desc}</Paragraph>
+                  </Space>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+
+      {/* Frontend Section */}
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <DesktopOutlined /> Frontend 개발
+            </Title>
+            <Paragraph type="secondary">HTML, CSS, JavaScript, React, Vue 등 프론트엔드 기술 학습</Paragraph>
+          </div>
+
+          {/* Language Filter */}
+          <Space wrap size="small">
+            <Button 
+              type={selectedFrontendLang === 'all' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('all')}
+            >
+              전체 보기
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'html' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('html')}
+              icon={<Image src="https://skillicons.dev/icons?i=html" alt="HTML" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              HTML
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'css' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('css')}
+              icon={<Image src="https://skillicons.dev/icons?i=css" alt="CSS" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              CSS
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'js' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('js')}
+              icon={<Image src="https://skillicons.dev/icons?i=js" alt="JS" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              JavaScript
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'ts' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('ts')}
+              icon={<Image src="https://skillicons.dev/icons?i=ts" alt="TS" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              TypeScript
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'react' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('react')}
+              icon={<Image src="https://skillicons.dev/icons?i=react" alt="React" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              React
+            </Button>
+            <Button 
+              type={selectedFrontendLang === 'vue' ? 'primary' : 'default'}
+              onClick={() => setSelectedFrontendLang('vue')}
+              icon={<Image src="https://skillicons.dev/icons?i=vue" alt="Vue" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              Vue
+            </Button>
+          </Space>
+
+          <Row gutter={[16, 16]}>
+            {frontendTools[selectedFrontendLang as keyof typeof frontendTools].map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
                   <Card 
                     hoverable
                     style={{ 
-                      height: '100%', 
-                      textAlign: 'center',
-                      background: feature.color,
-                      border: 'none'
+                      borderLeft: `4px solid ${tool.color}`,
+                      height: '100%'
                     }}
-                    bodyStyle={{ color: 'white' }}
                   >
-                    <div style={{ fontSize: 48, marginBottom: 16 }}>{feature.icon}</div>
-                    <Title level={4} style={{ color: 'white', marginBottom: 8 }}>{feature.title}</Title>
-                    <Paragraph style={{ color: 'rgba(255,255,255,0.9)', marginBottom: 0 }}>
-                      {feature.desc}
-                    </Paragraph>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
                   </Card>
                 </Link>
               </Col>
             ))}
           </Row>
-        </div>
-      </div>
+        </Space>
+      </Card>
 
-      {/* All Learning Tools */}
-      <div style={{ padding: '80px 24px', background: 'white' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <Title level={2} style={{ textAlign: 'center', marginBottom: 16 }}>
-            <ToolOutlined /> 모든 학습 도구
-          </Title>
-          <Paragraph style={{ textAlign: 'center', fontSize: 16, color: '#666', marginBottom: 48 }}>
-            개발부터 배포까지, 20개 이상의 실전 도구로 실력을 키워보세요
-          </Paragraph>
+      {/* Backend Section */}
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <DatabaseOutlined /> Backend 개발
+            </Title>
+            <Paragraph type="secondary">Node.js, Python, Java, Spring Boot 등 백엔드 기술 학습</Paragraph>
+          </div>
 
-          <Row gutter={[16, 16]}>
-            {learningTools.map((tool, idx) => (
-              <Col xs={24} sm={12} lg={6} key={idx}>
-                <Link href={tool.href}>
-                  <Card hoverable style={{ height: '100%' }}>
-                    <div style={{ fontSize: 32, marginBottom: 12 }}>{tool.icon}</div>
-                    <Title level={5} style={{ marginBottom: 8 }}>{tool.title}</Title>
-                    <Paragraph style={{ color: '#666', marginBottom: 0, fontSize: 14 }}>
-                      {tool.desc}
-                    </Paragraph>
-                  </Card>
-                </Link>
-              </Col>
-            ))}
-          </Row>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div style={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '80px 24px',
-        textAlign: 'center'
-      }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <Title level={2} style={{ color: 'white', marginBottom: 16 }}>
-            지금 바로 시작하세요! <RocketOutlined />
-          </Title>
-          <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, marginBottom: 32 }}>
-            회원가입 30초면 끝! AI와 함께하는 즐거운 코딩 학습
-          </Paragraph>
-          <Space size="large">
+          {/* Language Filter */}
+          <Space wrap size="small">
             <Button 
-              type="primary" 
-              size="large"
-              style={{ 
-                height: 48, 
-                fontSize: 16, 
-                paddingLeft: 32, 
-                paddingRight: 32,
-                background: 'white',
-                color: '#667eea',
-                border: 'none'
-              }}
-              href="/signup"
+              type={selectedBackendLang === 'all' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('all')}
             >
-              무료로 시작하기
+              전체 보기
             </Button>
             <Button 
-              size="large"
-              style={{ 
-                height: 48, 
-                fontSize: 16, 
-                paddingLeft: 32, 
-                paddingRight: 32,
-                background: 'transparent',
-                color: 'white',
-                borderColor: 'white'
-              }}
-              href="/catalog"
+              type={selectedBackendLang === 'node' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('node')}
+              icon={<Image src="https://skillicons.dev/icons?i=nodejs" alt="Node" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
             >
-              강의 둘러보기
+              Node.js
+            </Button>
+            <Button 
+              type={selectedBackendLang === 'python' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('python')}
+              icon={<Image src="https://skillicons.dev/icons?i=python" alt="Python" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              Python
+            </Button>
+            <Button 
+              type={selectedBackendLang === 'java' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('java')}
+              icon={<Image src="https://skillicons.dev/icons?i=java" alt="Java" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              Java
+            </Button>
+            <Button 
+              type={selectedBackendLang === 'spring' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('spring')}
+              icon={<Image src="https://skillicons.dev/icons?i=spring" alt="Spring" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              Spring Boot
+            </Button>
+            <Button 
+              type={selectedBackendLang === 'sql' ? 'primary' : 'default'}
+              onClick={() => setSelectedBackendLang('sql')}
+              icon={<Image src="https://skillicons.dev/icons?i=mysql" alt="SQL" width={16} height={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4 }} />}
+            >
+              SQL
             </Button>
           </Space>
-        </div>
-      </div>
-    </div>
+
+          <Row gutter={[16, 16]}>
+            {backendTools[selectedBackendLang as keyof typeof backendTools].map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
+                  <Card 
+                    hoverable
+                    style={{ 
+                      borderLeft: `4px solid ${tool.color}`,
+                      height: '100%'
+                    }}
+                  >
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        </Space>
+      </Card>
+
+      {/* DevOps & Tools */}
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <CloudOutlined /> DevOps & 개발 도구
+            </Title>
+            <Paragraph type="secondary">Git, Docker, 배포, 에러 디버깅 등 실무 필수 도구</Paragraph>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            {devopsTools.map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
+                  <Card 
+                    hoverable
+                    style={{ 
+                      borderLeft: `4px solid ${tool.color}`,
+                      height: '100%'
+                    }}
+                  >
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        </Space>
+      </Card>
+
+      {/* Career & Learning */}
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <GlobalOutlined /> 커리어 & 학습 관리
+            </Title>
+            <Paragraph type="secondary">포트폴리오, 면접, 학습 경로 등 취업 준비 도구</Paragraph>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            {careerTools.map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
+                  <Card 
+                    hoverable
+                    style={{ 
+                      borderLeft: `4px solid ${tool.color}`,
+                      height: '100%'
+                    }}
+                  >
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        </Space>
+      </Card>
+
+      {/* CTA Section */}
+      <Card>
+        <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center' }}>
+          <Title level={2}>지금 바로 시작하세요! <RocketOutlined /></Title>
+          <Paragraph>회원가입 30초면 끝! AI와 함께하는 즐거운 코딩 학습</Paragraph>
+          <Space>
+            <Button type="primary" size="large" href="/signup">무료로 시작하기</Button>
+            <Button size="large" href="/catalog">강의 둘러보기</Button>
+          </Space>
+        </Space>
+      </Card>
+    </Space>
   );
 }

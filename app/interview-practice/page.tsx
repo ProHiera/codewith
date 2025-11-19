@@ -64,19 +64,18 @@ export default function InterviewPracticePage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '24px' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <Card>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <div>
-              <Title level={2}>
-                <TrophyOutlined /> 기술 면접 연습
-              </Title>
-              <Progress
-                percent={Math.round((currentQ / questions.length) * 100)}
-                status="active"
-              />
-            </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <TrophyOutlined /> 기술 면접 연습
+            </Title>
+            <Progress
+              percent={Math.round((currentQ / questions.length) * 100)}
+              status="active"
+            />
+          </div>
 
             <Card size="small" style={{ background: '#f9f9f9' }}>
               <Space direction="vertical" size="middle" style={{ width: '100%' }}>
@@ -136,7 +135,6 @@ export default function InterviewPracticePage() {
             </Card>
           </Space>
         </Card>
-      </div>
-    </div>
+      </Space>
   );
 }

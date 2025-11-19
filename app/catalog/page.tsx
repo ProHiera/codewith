@@ -1,4 +1,8 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { CATALOG, DOMAINS, LANGS, type Domain } from '@/lib/catalog';
 import { Card, Row, Col, Tag, Space, Typography, Button } from 'antd';
 import { 
@@ -8,16 +12,12 @@ import {
   ToolOutlined
 } from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 
-type Props = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-};
-
-export default async function CatalogPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const domain = (params?.domain as Domain | undefined) || undefined;
-  const lang = (params?.lang as string | undefined) || undefined;
+export default function CatalogPage() {
+  const searchParams = useSearchParams();
+  const domain = (searchParams.get('domain') as Domain | null) || undefined;
+  const lang = searchParams.get('lang') || undefined;
 
   const items = CATALOG.filter(item => {
     const okDomain = domain ? item.domain === domain : true;
@@ -39,17 +39,17 @@ export default async function CatalogPage({ searchParams }: Props) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #e6f7ff 0%, #fff 100%)', padding: '24px' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          <div>
-            <Title level={1}>카탈로그</Title>
-            <Text type="secondary" style={{ fontSize: 16 }}>
-              {domainLabel ? `${domainLabel}` : '전체'}
-              {langLabel ? ` · ${langLabel}` : ''} 보기
-            </Text>
-          </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Title level={1}>카탈로그</Title>
+        <Text type="secondary" style={{ fontSize: 16 }}>
+          {domainLabel ? `${domainLabel}` : '전체'}
+          {langLabel ? ` · ${langLabel}` : ''} 보기
+        </Text>
+      </Card>
 
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {(domain || lang) && (
             <Space wrap>
               {domain && (
@@ -89,38 +89,212 @@ export default async function CatalogPage({ searchParams }: Props) {
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <div>
                 <Text strong style={{ marginBottom: 8, display: 'block' }}>Frontend</Text>
-                <Space wrap>
-                  {LANGS.filter(l => l.category === 'frontend').map(l => (
-                    <Link key={l.key} href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}>
-                      <Tag color={lang === l.key ? 'purple' : 'default'} style={{ cursor: 'pointer' }}>
-                        {l.label}
-                      </Tag>
-                    </Link>
-                  ))}
+                <Space wrap size="small">
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=html`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=html" 
+                      alt="HTML" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'html' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=css`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=css" 
+                      alt="CSS" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'css' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=js`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=js" 
+                      alt="JavaScript" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'js' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=ts`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=ts" 
+                      alt="TypeScript" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'ts' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=react`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=react" 
+                      alt="React" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'react' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=vue`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=vue" 
+                      alt="Vue" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'vue' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
                 </Space>
               </div>
               <div>
                 <Text strong style={{ marginBottom: 8, display: 'block' }}>Backend</Text>
-                <Space wrap>
-                  {LANGS.filter(l => l.category === 'backend').map(l => (
-                    <Link key={l.key} href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}>
-                      <Tag color={lang === l.key ? 'purple' : 'default'} style={{ cursor: 'pointer' }}>
-                        {l.label}
-                      </Tag>
-                    </Link>
-                  ))}
+                <Space wrap size="small">
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=node`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=nodejs" 
+                      alt="Node.js" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'node' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=python`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=python" 
+                      alt="Python" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'python' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=java`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=java" 
+                      alt="Java" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'java' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=spring`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=spring" 
+                      alt="Spring Boot" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'spring' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
                 </Space>
               </div>
               <div>
-                <Text strong style={{ marginBottom: 8, display: 'block' }}>DevOps</Text>
-                <Space wrap>
-                  {LANGS.filter(l => l.category === 'devops').map(l => (
-                    <Link key={l.key} href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=${l.key}`}>
-                      <Tag color={lang === l.key ? 'purple' : 'default'} style={{ cursor: 'pointer' }}>
-                        {l.label}
-                      </Tag>
-                    </Link>
-                  ))}
+                <Text strong style={{ marginBottom: 8, display: 'block' }}>Database & DevOps</Text>
+                <Space wrap size="small">
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=sql`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=mysql" 
+                      alt="SQL" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'sql' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=prisma`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=prisma" 
+                      alt="Prisma" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'prisma' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=git`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=git" 
+                      alt="Git" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'git' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=docker`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=docker" 
+                      alt="Docker" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'docker' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
+                  <Link href={`/catalog?${domain ? `domain=${domain}&` : ''}lang=k8s`}>
+                    <Image 
+                      src="https://skillicons.dev/icons?i=kubernetes" 
+                      alt="Kubernetes" 
+                      width={40}
+                      height={40}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: lang === 'k8s' ? '3px solid #722ed1' : 'none',
+                        borderRadius: 8
+                      }} 
+                    />
+                  </Link>
                 </Space>
               </div>
             </Space>
@@ -138,9 +312,9 @@ export default async function CatalogPage({ searchParams }: Props) {
                       <Title level={4} style={{ textAlign: 'center', margin: '8px 0' }}>
                         {item.title}
                       </Title>
-                      <Paragraph type="secondary" style={{ textAlign: 'center', marginBottom: 12 }}>
+                      <Text type="secondary" style={{ textAlign: 'center', marginBottom: 12, display: 'block' }}>
                         {item.description}
-                      </Paragraph>
+                      </Text>
                       <Space wrap style={{ justifyContent: 'center', width: '100%' }}>
                         {item.langs.map(l => (
                           <Tag key={l} color="blue">{l}</Tag>
@@ -161,7 +335,8 @@ export default async function CatalogPage({ searchParams }: Props) {
             </Card>
           )}
         </Space>
-      </div>
-    </div>
+      </Card>
+    </Space>
   );
 }
+

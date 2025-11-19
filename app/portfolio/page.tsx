@@ -97,28 +97,27 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <div style={{ background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'sticky', top: 64, zIndex: 100 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 50px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Title level={2} style={{ margin: 0 }}>
-              <FolderOutlined /> 내 포트폴리오
-            </Title>
-          </div>
-        </div>
-      </div>
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={2} style={{ margin: 0 }}>
+            <FolderOutlined /> 내 포트폴리오
+          </Title>
+        </Space>
+      </Card>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 50px' }}>
-        <div style={{ marginBottom: 24 }}>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={() => setShowModal(true)}
-          >
-            프로젝트 추가
-          </Button>
-        </div>
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              size="large"
+              onClick={() => setShowModal(true)}
+            >
+              프로젝트 추가
+            </Button>
+          </div>
 
         {projects.length === 0 ? (
           <Card>
@@ -168,9 +167,8 @@ export default function PortfolioPage() {
             ))}
           </Row>
         )}
-      </div>
 
-      <Modal
+        <Modal
         title="프로젝트 추가"
         open={showModal}
         onCancel={() => setShowModal(false)}
@@ -220,6 +218,8 @@ export default function PortfolioPage() {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+        </Space>
+      </Card>
+    </Space>
   );
 }

@@ -97,14 +97,12 @@ export default function SignUpPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5', padding: 24 }}>
+    <Space direction="vertical" size="large" style={{ width: '100%', padding: 24, justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
       <Card style={{ maxWidth: 480, width: '100%' }}>
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <Title level={2}>회원가입</Title>
-            <Paragraph type="secondary">
-              개발 학습 플랫폼에 오신 것을 환영합니다
-            </Paragraph>
+            <Paragraph type="secondary">개발 학습 플랫폼에 오신 것을 환영합니다</Paragraph>
           </div>
 
           <Form
@@ -176,13 +174,11 @@ export default function SignUpPage() {
           <div style={{ textAlign: 'center' }}>
             <Text type="secondary">
               이미 계정이 있으신가요?{' '}
-              <Link href="/login" style={{ color: '#1890ff' }}>
-                로그인
-              </Link>
+              <Link href="/login">로그인</Link>
             </Text>
           </div>
         </Space>
       </Card>
-    </div>
+    </Space>
   );
 }

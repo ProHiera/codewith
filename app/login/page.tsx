@@ -85,14 +85,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5', padding: 24 }}>
+    <Space direction="vertical" size="large" style={{ width: '100%', padding: 24, justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
       <Card style={{ maxWidth: 480, width: '100%' }}>
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <Title level={2}>로그인</Title>
-            <Paragraph type="secondary">
-              개발 학습을 시작하세요
-            </Paragraph>
+            <Paragraph type="secondary">개발 학습을 시작하세요</Paragraph>
           </div>
 
           {message && (
@@ -158,13 +156,11 @@ export default function LoginPage() {
           <div style={{ textAlign: 'center' }}>
             <Text type="secondary">
               계정이 없으신가요?{' '}
-              <Link href="/signup" style={{ color: '#1890ff' }}>
-                회원가입
-              </Link>
+              <Link href="/signup">회원가입</Link>
             </Text>
           </div>
         </Space>
       </Card>
-    </div>
+    </Space>
   );
 }
