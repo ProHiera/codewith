@@ -99,6 +99,5 @@ export default function CommitAssistantPage() {
           </Space>
         </Card>
       </Space>
-    </Space>
   );
 }

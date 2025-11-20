@@ -1,73 +1,120 @@
-'use client';
+﻿'use client';
 
-import { Card, Typography, Space, Collapse, Tag } from 'antd';
-import { CodeOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { Card, Typography, Space, Collapse, Tag, Tabs } from 'antd';
+import { CodeOutlined, BookOutlined } from '@ant-design/icons';
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
+const { TabPane } = Tabs;
 
-const principles = [
+// Basic clean code principles
+const cleanCodePrinciples = [
   {
-    title: 'DRY (Don\'t Repeat Yourself)',
-    description: '같은 코드를 반복하지 말고, 재사용 가능한 함수나 컴포넌트로 추상화하세요.',
-    bad: 'function calcArea1() { return width * height; }\nfunction calcArea2() { return w * h; }',
-    good: 'function calcArea(width, height) { return width * height; }',
-  },
-  {
-    title: 'KISS (Keep It Simple, Stupid)',
-    description: '복잡한 로직보다 단순하고 명확한 코드를 작성하세요.',
-    bad: 'const result = data.filter(x => x).map(x => x.value).reduce((a,b) => a+b);',
-    good: 'const sum = validData.reduce((total, item) => total + item.value, 0);',
-  },
-  {
-    title: 'SOLID 원칙',
-    description: '단일 책임, 개방-폐쇄, 리스코프 치환, 인터페이스 분리, 의존성 역전 원칙',
-    bad: 'class User { save() {} sendEmail() {} validateData() {} }',
-    good: 'class User {}\nclass UserRepository { save() {} }\nclass EmailService { send() {} }',
-  },
-  {
-    title: '의미있는 네이밍',
-    description: '변수명과 함수명은 목적을 명확히 드러내야 합니다.',
-    bad: 'const d = new Date(); const x = users.filter(u => u.age > 18);',
-    good: 'const currentDate = new Date(); const adults = users.filter(user => user.age > 18);',
-  },
+    title: '단일 책임 원칙 (SRP)',
+    description: '클래스는 단 하나의 책임만 가져야 한다.',
+    examples: [
+      {
+        bad: `class UserManager {
+  save(user) { /* DB 저장 */ }
+  sendEmail(user) { /* 이메일 전송 */ }
+}`,
+        good: `class UserRepository { save(user) { /* DB 저장 */ } }
+class EmailService { sendEmail(user) { /* 이메일 전송 */ } }`
+      }
+    ]
+  }
 ];
 
 export default function CleanCodePage() {
-  return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      <Card>
-        <Space direction="vertical" size="small">
-          <Title level={2}>
-            <CodeOutlined /> 클린 코드 가이드
-          </Title>
-          <Paragraph>
-            읽기 쉽고 유지보수하기 좋은 코드를 작성하는 방법을 배워보세요.
-          </Paragraph>
-        </Space>
-      </Card>
+  const [activeTab, setActiveTab] = useState('principles');
 
-        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-          {principles.map((principle, idx) => (
-            <Card key={idx} title={<><CheckCircleOutlined /> {principle.title}</>}>
-              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                <Paragraph>{principle.description}</Paragraph>
-                <Collapse>
-                  <Collapse.Panel header={<Tag color="red" icon={<CloseCircleOutlined />}>나쁜 예</Tag>} key="bad">
-                    <pre style={{ background: '#fff1f0', padding: 12, borderRadius: 8, overflow: 'auto' }}>
-                      {principle.bad}
-                    </pre>
-                  </Collapse.Panel>
-                  <Collapse.Panel header={<Tag color="green" icon={<CheckCircleOutlined />}>좋은 예</Tag>} key="good">
-                    <pre style={{ background: '#f6ffed', padding: 12, borderRadius: 8, overflow: 'auto' }}>
-                      {principle.good}
-                    </pre>
-                  </Collapse.Panel>
-                </Collapse>
+  return (
+    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <Title level={1}>
+            <CodeOutlined style={{ marginRight: '16px' }} />
+            클린 코드 가이드
+          </Title>
+          <Paragraph style={{ fontSize: '18px', color: '#666' }}>
+            읽기 쉽고, 유지보수하기 쉬운 코드를 작성하는 방법을 배워보세요
+          </Paragraph>
+        </div>
+
+        <Tabs activeKey={activeTab} onChange={setActiveTab} type="card">
+          <TabPane
+            tab={
+              <Space>
+                <BookOutlined />
+                <Text>기본 원칙</Text>
               </Space>
+            }
+            key="principles"
+          >
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+              {cleanCodePrinciples.map((principle, index) => (
+                <Card key={index} title={
+                  <Space>
+                    <BookOutlined />
+                    <Text strong>{principle.title}</Text>
+                  </Space>
+                }>
+                  <Paragraph>{principle.description}</Paragraph>
+                  <Collapse>
+                    <Collapse.Panel header={
+                      <Space>
+                        <CodeOutlined />
+                        <Text>코드 예제</Text>
+                      </Space>
+                    }>
+                      <div style={{ display: 'flex', gap: '16px' }}>
+                        <div style={{ flex: 1 }}>
+                          <Card size="small" title="나쁜 예" style={{ backgroundColor: '#fff2f0' }}>
+                            <pre style={{ fontSize: '12px', overflow: 'auto' }}>
+                              {principle.examples[0].bad}
+                            </pre>
+                          </Card>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <Card size="small" title="좋은 예" style={{ backgroundColor: '#f6ffed' }}>
+                            <pre style={{ fontSize: '12px', overflow: 'auto' }}>
+                              {principle.examples[0].good}
+                            </pre>
+                          </Card>
+                        </div>
+                      </div>
+                    </Collapse.Panel>
+                  </Collapse>
+                </Card>
+              ))}
+            </Space>
+          </TabPane>
+
+          <TabPane tab="리팩토링 챌린지" key="challenges">
+            <Card>
+              <Text>리팩토링 챌린지 기능이 곧 추가됩니다.</Text>
             </Card>
-          ))}
-        </Space>
+          </TabPane>
+
+          <TabPane tab="디자인 패턴" key="patterns">
+            <Card>
+              <Text>디자인 패턴 학습 기능이 곧 추가됩니다.</Text>
+            </Card>
+          </TabPane>
+
+          <TabPane tab="품질 지표" key="metrics">
+            <Card>
+              <Text>코드 품질 분석 기능이 곧 추가됩니다.</Text>
+            </Card>
+          </TabPane>
+
+          <TabPane tab="성취 배지" key="badges">
+            <Card>
+              <Text>성취 배지 시스템이 곧 추가됩니다.</Text>
+            </Card>
+          </TabPane>
+        </Tabs>
       </Space>
-    </Space>
+    </div>
   );
 }

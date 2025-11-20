@@ -55,6 +55,5 @@ export default function LearningRadarPage() {
           </Space>
         </Card>
       </Space>
-    </Space>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { FloatButton, Card, Input, Button, Space, Spin, Badge, Typography } from 'antd';
-import { RobotOutlined, CloseOutlined, SendOutlined } from '@ant-design/icons';
+import Image from 'next/image';
+import { Card, Input, Button, Space, Spin, Typography } from 'antd';
+import { CloseOutlined, SendOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -55,18 +56,30 @@ export default function GlobalAICoach() {
     <>
       {/* Floating Toggle Button */}
       {!isOpen && (
-        <FloatButton
-          icon={<Badge dot color="green"><RobotOutlined style={{ fontSize: 24 }} /></Badge>}
-          type="primary"
-          style={{ 
-            width: 64, 
-            height: 64,
+        <div
+          style={{
+            position: 'fixed',
             right: 32,
             bottom: 32,
+            zIndex: 1000,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
           onClick={() => setIsOpen(true)}
-          tooltip="AI 코치에게 물어보기"
-        />
+          title="AI 코치에게 물어보기"
+        >
+
+          {/*home main image*/}
+            <Image
+              src="/ai-character.png"
+              alt="AI Coach"
+              width={80}
+              height={80}
+              style={{ display: 'block' }}
+            />
+        </div>
       )}
 
       {/* Chat Panel */}
@@ -102,18 +115,24 @@ export default function GlobalAICoach() {
             <div style={{ 
               background: '#1f2937', 
               color: 'white', 
-              padding: 16,
+              padding: 20,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
               <Space>
-                <Badge dot color="green">
-                  <RobotOutlined style={{ fontSize: 32 }} />
-                </Badge>
+
+                  <Image 
+                    src="/ai-character.png" 
+                    alt="AI Coach" 
+                    width={56} 
+                    height={56}
+                    style={{}}
+                  />
+
                 <div>
-                  <Title level={4} style={{ margin: 0, color: 'white', fontSize: 18 }}>AI 개발 코치</Title>
-                  <Text style={{ color: '#9ca3af', fontSize: 12 }}>항상 함께하는 코딩 파트너</Text>
+                  <Title level={3} style={{ margin: 0, color: 'white', fontSize: 24 }}>AI 개발 코치</Title>
+                  <Text style={{ color: '#9ca3af', fontSize: 14 }}>항상 함께하는 코딩 파트너</Text>
                 </div>
               </Space>
               <Button 
@@ -139,9 +158,20 @@ export default function GlobalAICoach() {
                   key={idx}
                   style={{ 
                     display: 'flex', 
-                    justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start'
+                    justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                    alignItems: 'flex-start',
+                    gap: 8
                   }}
                 >
+                  {msg.role === 'ai' && (
+                    <Image 
+                      src="/ai-character.png" 
+                      alt="AI" 
+                      width={40} 
+                      height={40}
+                      style={{ flexShrink: 0 }}
+                    />
+                  )}
                   <div
                     style={{
                       maxWidth: '80%',
@@ -160,7 +190,14 @@ export default function GlobalAICoach() {
                 </div>
               ))}
               {isLoading && (
-                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 8 }}>
+                  <Image 
+                    src="/ai-character.png" 
+                    alt="AI" 
+                    width={40} 
+                    height={40}
+                    style={{ flexShrink: 0 }}
+                  />
                   <div style={{ 
                     background: 'white', 
                     border: '1px solid #e5e7eb', 

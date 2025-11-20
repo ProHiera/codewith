@@ -31,7 +31,8 @@ import {
   CloudOutlined,
   DesktopOutlined,
   GlobalOutlined,
-  FolderOutlined
+  FolderOutlined,
+  BulbOutlined
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -104,7 +105,7 @@ export default function HomePage() {
   const frontendTools = {
     all: [
       { icon: <FireOutlined />, title: 'CSS 스피드런', desc: '자동 채점 CSS 실습', href: '/missions', color: '#f5222d', langs: ['html', 'css'] },
-      { icon: <CheckCircleOutlined />, title: '접근성 검사기', desc: 'ARIA 점검 및 제안', href: '/accessibility-checker', color: '#52c41a', langs: ['html'] },
+  // 접근성 검사기는 기초상식에 통합
       { icon: <CodeOutlined />, title: 'JS 암기장', desc: '레벨별 JS 개념 암기', href: '/js-cheats', color: '#52c41a', langs: ['js'] },
       { icon: <BookOutlined />, title: 'JS 개념 스냅샷', desc: '표현식/문, this, async', href: '/concept-snaps', color: '#1890ff', langs: ['js'] },
       { icon: <ThunderboltOutlined />, title: '비동기 시뮬레이터', desc: 'await ~ finally 시각화', href: '/async-simulator', color: '#faad14', langs: ['js'] },
@@ -176,7 +177,9 @@ export default function HomePage() {
     { icon: <CodeOutlined />, title: '면접 리허설', desc: '질문/모범답안/실습', href: '/interview-practice', color: '#1890ff' },
     { icon: <BookOutlined />, title: '러닝 경로', desc: '목표별 N주 로드맵', href: '/learning-paths', color: '#1890ff' },
     { icon: <ExperimentOutlined />, title: '학습 레이더', desc: '취약 개념 분석', href: '/learning-radar', color: '#faad14' },
+    { icon: <CodeOutlined />, title: '클린 코드 가이드', desc: '리팩토링과 디자인 패턴', href: '/clean-code', color: '#52c41a' },
     { icon: <FolderOutlined />, title: '프로젝트 구조 배우기', desc: 'VS Code 파일 트리 시뮬레이션', href: '/project-structure', color: '#52c41a' },
+    { icon: <BulbOutlined />, title: 'UI 컴포넌트 가이드', desc: 'Ant Design 사용법과 재사용 패턴', href: '/ui-guide', color: '#13c2c2' },
   ];
 
   const [selectedFrontendLang, setSelectedFrontendLang] = useState<string>('all');
@@ -197,12 +200,12 @@ export default function HomePage() {
           ) : (
             <>
               <Title>집에서 혼자 공부하는</Title>
-              <Title><Text type="warning">당신을 위한 AI 학습 파트너</Text></Title>
+              <Title style={{ fontSize: '2rem' }}>당신을 위한 AI 학습 파트너</Title>
             </>
           )}
 
           <Paragraph>
-            초보 개발자 · 취준생 · N잡 준비생 · 비전공자를 위한<br />
+            초보 개발자 · 취준생 · N잡 준비생 · 비전공자 · ADHD<br />
             <Text strong>AI 코치가 함께하는 즐거운 코딩 학습</Text>
           </Paragraph>
 
@@ -230,7 +233,6 @@ export default function HomePage() {
 
       {/* Core Values */}
       <Card>
-        <Title level={2} style={{ textAlign: 'center' }}>우리가 제공하는 핵심 가치</Title>
         <Paragraph type="secondary" style={{ textAlign: 'center' }}>다른 학습 플랫폼과 뭐가 다른가요?</Paragraph>
         <Divider />
 
@@ -280,12 +282,54 @@ export default function HomePage() {
         </Row>
       </Card>
 
+      {/* Frontend Basic Knowledge Section */}
+      <Card>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <div>
+            <Title level={2}>
+              <BookOutlined /> 기초 상식
+            </Title>
+            <Paragraph type="secondary">웹 표준, HTML/CSS, 접근성, 반응형 등 프론트엔드 개발의 기본 개념을 익혀보세요.</Paragraph>
+          </div>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={8} lg={6}>
+              <Card hoverable style={{ borderLeft: '4px solid #1890ff', height: '100%' }}>
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  <div style={{ fontSize: 32, color: '#1890ff' }}><BookOutlined /></div>
+                  <Title level={5} style={{ margin: 0 }}>HTML/CSS 기초</Title>
+                  <Text type="secondary" style={{ fontSize: 13 }}>태그, 시맨틱 마크업, 스타일링의 기본</Text>
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} lg={6}>
+              <Link href="/accessibility-checker">
+                <Card hoverable style={{ borderLeft: '4px solid #52c41a', height: '100%' }}>
+                  <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                    <div style={{ fontSize: 32, color: '#52c41a' }}><CheckCircleOutlined /></div>
+                    <Title level={5} style={{ margin: 0 }}>웹 표준 & 접근성 검사기</Title>
+                    <Text type="secondary" style={{ fontSize: 13 }}>W3C, ARIA, 시각장애인 지원, 접근성 자동 점검</Text>
+                  </Space>
+                </Card>
+              </Link>
+            </Col>
+          </Row>
+        </Space>
+      </Card>
+
       {/* Frontend Section */}
       <Card>
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div>
             <Title level={2}>
-              <DesktopOutlined /> Frontend 개발
+              <DesktopOutlined />
+              <span style={{ marginLeft: 8 }}>Frontend</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 8, fontWeight: 500, fontSize: 16 }}>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>컴포넌트 구조 설계</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>컴포넌트 및 반응형 디자인 구현</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>목업 데이터 기반 시나리오 구현</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>API 연동</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px' }}>테스트 및 검증</span>
+              </span>
             </Title>
             <Paragraph type="secondary">HTML, CSS, JavaScript, React, Vue 등 프론트엔드 기술 학습</Paragraph>
           </div>
@@ -342,27 +386,97 @@ export default function HomePage() {
             </Button>
           </Space>
 
-          <Row gutter={[16, 16]}>
-            {frontendTools[selectedFrontendLang as keyof typeof frontendTools].map((tool, idx) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
-                <Link href={tool.href}>
-                  <Card 
-                    hoverable
-                    style={{ 
-                      borderLeft: `4px solid ${tool.color}`,
-                      height: '100%'
-                    }}
-                  >
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
-                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
-                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
-                    </Space>
-                  </Card>
-                </Link>
-              </Col>
-            ))}
-          </Row>
+          {/* 전체보기일 때만 카테고리별로 분리 */}
+          {selectedFrontendLang === 'all' ? (
+            <>
+              <Divider orientation="left" plain>구조/설계</Divider>
+              <Row gutter={[16, 16]}>
+                {frontendTools.all.filter(t => t.title.includes('구조') || t.title.includes('접근성')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+              <Divider orientation="left" plain>UI/디자인</Divider>
+              <Row gutter={[16, 16]}>
+                {frontendTools.all.filter(t => t.title.includes('CSS') || t.title.includes('클론')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+              <Divider orientation="left" plain>로직/시나리오</Divider>
+              <Row gutter={[16, 16]}>
+                {frontendTools.all.filter(t => t.title.includes('JS') || t.title.includes('비동기')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+              <Divider orientation="left" plain>API/연동</Divider>
+              <Row gutter={[16, 16]}>
+                {frontendTools.all.filter(t => t.title.includes('API')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+            </>
+          ) : (
+            <Row gutter={[16, 16]}>
+              {frontendTools[selectedFrontendLang as keyof typeof frontendTools].map((tool, idx) => (
+                <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                  <Link href={tool.href}>
+                    <Card 
+                      hoverable
+                      style={{ 
+                        borderLeft: `4px solid ${tool.color}`,
+                        height: '100%'
+                      }}
+                    >
+                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                        <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                        <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                        <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                      </Space>
+                    </Card>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          )}
         </Space>
       </Card>
 
@@ -371,7 +485,15 @@ export default function HomePage() {
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div>
             <Title level={2}>
-              <DatabaseOutlined /> Backend 개발
+              <DatabaseOutlined />
+              <span style = {{ marginLeft: '8px' }}>Backend</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 8, fontWeight: 500, fontSize: 16 }}>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>데이터베이스 설계</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>API 설계</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>비즈니스 로직 구현</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px', marginRight: 4 }}>API 배포 및 문서화</span>
+                <span style={{ border: '1px solid #d1d5db', borderRadius: 8, padding: '4px 14px' }}>테스트 및 검증</span>
+              </span>
             </Title>
             <Paragraph type="secondary">Node.js, Python, Java, Spring Boot 등 백엔드 기술 학습</Paragraph>
           </div>
@@ -421,27 +543,64 @@ export default function HomePage() {
             </Button>
           </Space>
 
-          <Row gutter={[16, 16]}>
-            {backendTools[selectedBackendLang as keyof typeof backendTools].map((tool, idx) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
-                <Link href={tool.href}>
-                  <Card 
-                    hoverable
-                    style={{ 
-                      borderLeft: `4px solid ${tool.color}`,
-                      height: '100%'
-                    }}
-                  >
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
-                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
-                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
-                    </Space>
-                  </Card>
-                </Link>
-              </Col>
-            ))}
-          </Row>
+          {selectedBackendLang === 'all' ? (
+            <>
+              <Divider orientation="left" plain>DB/설계</Divider>
+              <Row gutter={[16, 16]}>
+                {backendTools.all.filter(t => t.title.includes('DB')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+              <Divider orientation="left" plain>API/패턴</Divider>
+              <Row gutter={[16, 16]}>
+                {backendTools.all.filter(t => t.title.includes('패턴') || t.title.includes('API')).map((tool, idx) => (
+                  <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                    <Link href={tool.href}>
+                      <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                          <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                          <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                          <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                        </Space>
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+            </>
+          ) : (
+            <Row gutter={[16, 16]}>
+              {backendTools[selectedBackendLang as keyof typeof backendTools].map((tool, idx) => (
+                <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                  <Link href={tool.href}>
+                    <Card 
+                      hoverable
+                      style={{ 
+                        borderLeft: `4px solid ${tool.color}`,
+                        height: '100%'
+                      }}
+                    >
+                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                        <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                        <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                        <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                      </Space>
+                    </Card>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          )}
         </Space>
       </Card>
 
@@ -455,17 +614,45 @@ export default function HomePage() {
             <Paragraph type="secondary">Git, Docker, 배포, 에러 디버깅 등 실무 필수 도구</Paragraph>
           </div>
 
+          {/* DevOps 전체보기: 배포/버전관리/디버깅 등 카테고리 분리 */}
+          <Divider orientation="left" plain>배포/CI</Divider>
           <Row gutter={[16, 16]}>
-            {devopsTools.map((tool, idx) => (
+            {devopsTools.filter(t => t.title.includes('배포')).map((tool, idx) => (
               <Col xs={24} sm={12} md={8} lg={6} key={idx}>
                 <Link href={tool.href}>
-                  <Card 
-                    hoverable
-                    style={{ 
-                      borderLeft: `4px solid ${tool.color}`,
-                      height: '100%'
-                    }}
-                  >
+                  <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+          <Divider orientation="left" plain>버전관리/Git</Divider>
+          <Row gutter={[16, 16]}>
+            {devopsTools.filter(t => t.title.includes('Git')).map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
+                  <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
+                      <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
+                      <Text type="secondary" style={{ fontSize: 13 }}>{tool.desc}</Text>
+                    </Space>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+          <Divider orientation="left" plain>디버깅/품질</Divider>
+          <Row gutter={[16, 16]}>
+            {devopsTools.filter(t => t.title.includes('에러') || t.title.includes('커밋')).map((tool, idx) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={idx}>
+                <Link href={tool.href}>
+                  <Card hoverable style={{ borderLeft: `4px solid ${tool.color}`, height: '100%' }}>
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
                       <div style={{ fontSize: 32, color: tool.color }}>{tool.icon}</div>
                       <Title level={5} style={{ margin: 0 }}>{tool.title}</Title>
@@ -510,18 +697,6 @@ export default function HomePage() {
               </Col>
             ))}
           </Row>
-        </Space>
-      </Card>
-
-      {/* CTA Section */}
-      <Card>
-        <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center' }}>
-          <Title level={2}>지금 바로 시작하세요! <RocketOutlined /></Title>
-          <Paragraph>회원가입 30초면 끝! AI와 함께하는 즐거운 코딩 학습</Paragraph>
-          <Space>
-            <Button type="primary" size="large" href="/signup">무료로 시작하기</Button>
-            <Button size="large" href="/catalog">강의 둘러보기</Button>
-          </Space>
         </Space>
       </Card>
     </Space>
